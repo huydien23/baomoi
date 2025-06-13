@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Duyệt Bài - Báo 24h</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="/"><img src="https://picsum.photos/200/50" alt="24h Tin Mới"></a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="admin.html" class="active">Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <h2>Quản trị duyệt bài từ RSS</h2>
+            <div id="adminStatus" style="color:red;margin-bottom:10px;"></div>
+            <table id="pendingPostsTable" class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Tiêu đề</th>
+                        <th>Chuyên mục</th>
+                        <th>Ngày lấy</th>
+                        <th>Trạng thái</th>
+                        <th>Duyệt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Bài viết chờ duyệt sẽ được render ở đây -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
