@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin tài khoản</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { 
+            background: var(--bg-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-primary);
+        }
+
+        .account-page { 
+            display: flex; 
+            gap: 32px; 
+            margin: 40px auto;
+            max-width: 1000px;
+            padding: 0 20px;
+        }
+
+        .account-sidebar { 
+            width: 280px; 
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            height: fit-content;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-section {
+            padding: 0 24px 24px 24px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .profile-email {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-title { 
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 0 24px 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .menu { 
+            display: flex; 
+            flex-direction: column;
+            gap: 4px;
+            padding: 0 12px;
+        }
+
+        .menu > div { 
+            padding: 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu > div i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu > div:hover, 
+        .menu > .active { 
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .logout-btn { 
+            color: var(--danger-color) !important;
+            margin-top: 8px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px !important;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger-color) !important;
+            color: white !important;
+        }
+
+        .support { 
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 13px;
+            margin: 24px 16px 0;
+            color: var(--text-secondary);
+        }
+
+        .support a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .support a:hover {
+            text-decoration: underline;
+        }
+
+        .account-main { 
+            flex: 1;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 32px;
+            min-width: 0;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .main-title { 
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .main-title i {
+            color: var(--primary-color);
+        }
+
+        .info-list { 
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .info-row { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .info-row:hover {
+            transform: translateX(4px);
+        }
+
+        .info-label { 
+            color: var(--text-secondary);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-label i {
+            color: var(--primary-color);
+        }
+
+        .info-value { 
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .info-action { 
+            color: var(--primary-color);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-left: 16px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: var(--hover-bg);
+            transition: all 0.2s ease;
+        }
+
+        .info-action:hover { 
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .disabled-link { 
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-left: 16px;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .back-home-btn {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-home-btn:hover {
+            transform: translateX(-4px);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 900px) {
+            .account-page { 
+                flex-direction: column;
+                gap: 24px;
+                margin-top: 80px;
+            }
+            .account-sidebar { 
+                width: 100%;
+            }
+            .account-main { 
+                padding: 24px;
+            }
+            .back-home-btn {
+                top: 16px;
+                left: 16px;
+            }
+            .info-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .info-row > div:last-child {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-home-btn" onclick="window.location.href='index.html'">
+        <i class="fas fa-arrow-left"></i> Trang chủ
+    </button>
+    <div class="account-page">
+        <div class="account-sidebar">
+            <div class="profile-section">
+                <div class="profile-avatar" id="profileAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-name" id="displayNameHeader">Chưa có dữ liệu</div>
+                <div class="profile-email" id="userEmailHeader">email@gmail.com</div>
+            </div>
+            <div class="sidebar-title">Menu</div>
+            <div class="menu">
+                <div class="active">
+                    <i class="fas fa-user-circle"></i>
+                    Thông tin chung
+                </div>
+                <div class="theme-switch">
+                    <i class="fas fa-moon"></i>
+                    <span>Chế độ tối</span>
+                    <label class="switch">
+                        <input type="checkbox" class="theme-toggle" id="themeToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div>
+                    <i class="fas fa-history"></i>
+                    Tin đã xem
+                </div>
+                <div class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Đăng xuất
+                </div>
+            </div>
+            <div class="support">
+                <i class="fas fa-headset"></i> Cần hỗ trợ? Liên hệ: 
+                <a href="mailto:bandoc@vnexpress.net">bandoc@vnexpress.net</a>
+            </div>
+        </div>
+        <div class="account-main">
+            <div class="main-title">
+                <i class="fas fa-user-circle"></i>
+                Thông tin tài khoản
+            </div>
+            <div class="info-list">
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-user"></i>
+                        Họ tên
+                    </div>
+                    <div>
+                        <span class="info-value" id="displayName">Chưa có dữ liệu</span>
+                        <span class="info-action" id="editNameBtn">
+                            <i class="fas fa-pen"></i> Thay đổi
+                        </span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-envelope"></i>
+                        Email
+                    </div>
+                    <div>
+                        <span class="info-value" id="userEmail">email@gmail.com</span>
+                        <span class="disabled-link">Không thể thay đổi</span>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">
+                        <i class="fas fa-lock"></i>
+                        Mật khẩu
+                    </div>
+                    <div>
+                        <span class="info-value">••••••••</span>
+                        <span class="info-action" id="editPasswordBtn">
+                            <i class="fas fa-key"></i> Thay đổi
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { ThemeManager } from './js/theme.js';
+
+    // Initialize theme manager
+    ThemeManager.init();
+
+    // Hiển thị thông tin user nếu đã đăng nhập
+    onAuthStateChanged(auth, user => {
+        if (!user) {
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        // Update all user information displays
+        const userEmail = user.email;
+        const displayName = user.displayName || 'Chưa có dữ liệu';
+        
+        document.getElementById('userEmail').textContent = userEmail;
+        document.getElementById('userEmailHeader').textContent = userEmail;
+        document.getElementById('displayName').textContent = displayName;
+        document.getElementById('displayNameHeader').textContent = displayName;
+
+        // Set avatar text if no profile picture
+        if (user.displayName) {
+            const initials = user.displayName
+                .split(' ')
+                .map(name => name[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+            document.getElementById('profileAvatar').innerHTML = initials;
+        }
+    });
+
+    // Đăng xuất
+    document.getElementById('logoutBtn').onclick = async () => {
+        try {
+            await signOut(auth);
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Lỗi đăng xuất:', error);
+        }
+    };
+
+    // Add active class to menu items
+    document.querySelectorAll('.menu > div').forEach(item => {
+        item.addEventListener('click', function() {
+            if (this.classList.contains('logout-btn') || this.classList.contains('theme-switch')) return;
+            document.querySelector('.menu > .active').classList.remove('active');
+            this.classList.add('active');
+        });
+    });
+    </script>
+</body>
+</html> 
