@@ -5,13 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông tin tài khoản</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        :root[data-theme="light"] {
+            --primary-color: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --success-color: #059669;
+            --danger-color: #dc2626;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --bg-primary: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --border-color: #e5e7eb;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --hover-bg: rgba(37, 99, 235, 0.1);
+        }
+
+        :root[data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --text-primary: #f3f4f6;
+            --text-secondary: #d1d5db;
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --border-color: #374151;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+            --hover-bg: rgba(59, 130, 246, 0.2);
+        }
+
         body { 
             background: var(--bg-primary);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .account-page { 
@@ -110,6 +140,66 @@
         .menu > .active { 
             background: var(--primary-color);
             color: white;
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-switch:hover {
+            background: var(--hover-bg);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
         }
 
         .logout-btn { 
@@ -283,6 +373,135 @@
                 align-items: center;
             }
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            margin: 15% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--card-shadow);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+
+        .close {
+            color: var(--text-secondary);
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--hover-bg);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover-bg);
+        }
     </style>
 </head>
 <body>
@@ -308,7 +527,7 @@
                     <i class="fas fa-moon"></i>
                     <span>Chế độ tối</span>
                     <label class="switch">
-                        <input type="checkbox" class="theme-toggle" id="themeToggle">
+                        <input type="checkbox" id="themeToggle">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -369,60 +588,57 @@
             </div>
         </div>
     </div>
-    <script type="module">
-    import { auth } from './js/firebase-config.js';
-    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { ThemeManager } from './js/theme.js';
+    <!-- Modal thay đổi họ tên -->
+    <div id="editNameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thay đổi họ tên</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editNameForm">
+                    <div class="form-group">
+                        <label for="newName">Họ tên mới:</label>
+                        <input type="text" id="newName" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Lưu thay đổi</button>
+                        <button type="button" class="btn-secondary close-modal">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    // Initialize theme manager
-    ThemeManager.init();
-
-    // Hiển thị thông tin user nếu đã đăng nhập
-    onAuthStateChanged(auth, user => {
-        if (!user) {
-            window.location.href = 'index.html';
-            return;
-        }
-        
-        // Update all user information displays
-        const userEmail = user.email;
-        const displayName = user.displayName || 'Chưa có dữ liệu';
-        
-        document.getElementById('userEmail').textContent = userEmail;
-        document.getElementById('userEmailHeader').textContent = userEmail;
-        document.getElementById('displayName').textContent = displayName;
-        document.getElementById('displayNameHeader').textContent = displayName;
-
-        // Set avatar text if no profile picture
-        if (user.displayName) {
-            const initials = user.displayName
-                .split(' ')
-                .map(name => name[0])
-                .join('')
-                .toUpperCase()
-                .slice(0, 2);
-            document.getElementById('profileAvatar').innerHTML = initials;
-        }
-    });
-
-    // Đăng xuất
-    document.getElementById('logoutBtn').onclick = async () => {
-        try {
-            await signOut(auth);
-            window.location.href = 'index.html';
-        } catch (error) {
-            console.error('Lỗi đăng xuất:', error);
-        }
-    };
-
-    // Add active class to menu items
-    document.querySelectorAll('.menu > div').forEach(item => {
-        item.addEventListener('click', function() {
-            if (this.classList.contains('logout-btn') || this.classList.contains('theme-switch')) return;
-            document.querySelector('.menu > .active').classList.remove('active');
-            this.classList.add('active');
-        });
-    });
-    </script>
+    <!-- Modal thay đổi mật khẩu -->
+    <div id="editPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thay đổi mật khẩu</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editPasswordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại:</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu mới:</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Xác nhận mật khẩu mới:</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Lưu thay đổi</button>
+                        <button type="button" class="btn-secondary close-modal">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/account.js"></script>
 </body>
 </html> 
