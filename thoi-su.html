@@ -1,565 +1,587 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>24h Tin Mới - Tin tức mới nhất trong ngày</title>
+    <title>VnExpress - Báo tiếng Việt nhiều người xem nhất</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Firebase SDK -->
     <script type="module" src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
-    <!-- Firebase Config -->
-    <script type="module" src="js/firebase-config.js"></script>
-    <!-- Auth Script -->
-    <script type="module" src="js/auth.js"></script>
-    <!-- Inject Modals -->
-    <script type="module" src="js/inject-modals.js"></script>
+    <style>
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .auth-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .login-btn {
+            color: var(--primary-color);
+            background: var(--hover-bg);
+        }
+
+        .login-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .register-btn {
+            color: white;
+            background: var(--primary-color);
+        }
+
+        .register-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: var(--hover-bg);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-menu-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            min-width: 200px;
+            display: none;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-switch:hover {
+            background: var(--hover-bg);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <div class="logo">
-                <a href="/"><img src="logo.png" alt="24h Tin Mới"></a>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="index.html">Trang chủ</a></li>
-                    <li><a href="thoi-su.html">Thời sự</a></li>
-                    <li><a href="kinh-te.html">Kinh tế</a></li>
-                    <li><a href="the-thao.html">Thể thao</a></li>
-                    <li><a href="giai-tri.html">Giải trí</a></li>
-                    <li><a href="phap-luat.html">Pháp luật</a></li>
-                    <li><a href="giao-duc.html">Giáo dục</a></li>
-                    <li><a href="y-te.html">Y tế</a></li>
-                </ul>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">VnExpress</a>
+            <nav class="nav">
+                <a href="index.html">Trang chủ</a>
+                <a href="thoi-su.html">Thời sự</a>
+                <a href="kinh-te.html">Kinh tế</a>
+                <a href="phap-luat.html">Pháp luật</a>
+                <a href="the-thao.html">Thể thao</a>
+                <a href="giao-duc.html">Giáo dục</a>
+                <a href="y-te.html">Sức khỏe</a>
             </nav>
-            <div class="search-login">
-                <div class="search-box">
-                    <input type="text" placeholder="Tìm kiếm...">
-                    <button type="submit" class="search-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-                <div id="authButton" class="login-btn" style="display: none;">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div id="userMenu" class="user-menu" style="display: none;">
-                    <div class="user-menu-header">
-                        <img src="" alt="User Avatar" class="user-avatar" id="userAvatar">
-                        <div class="user-info">
-                            <div class="user-name" id="userFullName"></div>
-                            <div class="user-email" id="userEmail"></div>
-                        </div>
+            <div class="auth-buttons" id="authButtons">
+                <button class="auth-btn login-btn" id="loginBtn">Đăng nhập</button>
+                <button class="auth-btn register-btn" id="registerBtn">Đăng ký</button>
+            </div>
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <button class="user-menu-btn" id="userMenuBtn">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userEmail">user@example.com</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="account.html" class="dropdown-item">
+                        <i class="fas fa-user"></i>
+                        Tài khoản
+                    </a>
+                    <div class="theme-switch">
+                        <i class="fas fa-moon"></i>
+                        <span>Chế độ tối</span>
+                        <label class="switch">
+                            <input type="checkbox" class="theme-toggle" id="themeToggle">
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                    <div class="user-menu-content">
-                        <a href="#" id="accountInfoBtn" class="menu-item">
-                            <i class="fas fa-user-circle"></i>
-                            <span>Thông tin cá nhân</span>
-                        </a>
-                        <a href="#" id="settingsBtn" class="menu-item">
-                            <i class="fas fa-cog"></i>
-                            <span>Cài đặt giao diện</span>
-                        </a>
-                        <div class="menu-divider"></div>
-                        <a href="#" id="logoutButton" class="menu-item logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Đăng xuất</span>
-                        </a>
-                    </div>
+                    <a href="#" class="dropdown-item" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Đăng xuất
+                    </a>
                 </div>
             </div>
         </div>
     </header>
 
     <main>
+        <div class="search-bar-outer">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm...">
+            </div>
+            <div id="searchResultMessage" style="color:red;margin-top:6px;font-size:15px;"></div>
+        </div>
         <div class="container main-container">
             <div class="main-content">
-
-                
+                <section class="latest-news">
+                    <h2>Tin mới nhất</h2>
+                    <div class="news-grid">
+                        <!-- Các bài báo mới nhất sẽ được render động bằng JS -->
+                        <article class="news-card">
+                            <a href="#">
+                                <div class="news-image">
+                                    <img src="" alt="Tin mới">
+                                </div>
+                                <div class="news-content">
+                                    <h3></h3>
+                                    <p></p>
+                                    <div class="article-meta">
+                                        <span class="time"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                        <article class="news-card">
+                            <a href="#">
+                                <div class="news-image">
+                                    <img src="" alt="Tin mới">
+                                </div>
+                                <div class="news-content">
+                                    <h3></h3>
+                                    <p></p>
+                                    <div class="article-meta">
+                                        <span class="time"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                        <article class="news-card">
+                            <a href="#">
+                                <div class="news-image">
+                                    <img src="" alt="Tin mới">
+                                </div>
+                                <div class="news-content">
+                                    <h3></h3>
+                                    <p></p>
+                                    <div class="article-meta">
+                                        <span class="time"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                        <article class="news-card">
+                            <a href="#">
+                                <div class="news-image">
+                                    <img src="" alt="Tin mới">
+                                </div>
+                                <div class="news-content">
+                                    <h3></h3>
+                                    <p></p>
+                                    <div class="article-meta">
+                                        <span class="time"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+                </section>
 
                 <div class="category-sections">
-                    <section class="tech-news">
-                        <div class="category-title">HOT</div>
+                    <section class="thoi-su-news">
                         <div class="news-list category-news-list">
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe1.jpg" alt="Tin mới 1">
-                                </div>
-                                <div class="news-content">
-                                    <h3>AI tạo ra bước đột phá mới trong y tế</h3>
-                                    <p>Các nhà khoa học đã ứng dụng AI để phát hiện bệnh sớm hơn...</p>
-                                    <span class="news-time">1 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe2.jpg" alt="Tin mới 2">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Việt Nam thử nghiệm mạng 6G đầu tiên</h3>
-                                    <p>Các nhà mạng lớn bắt đầu thử nghiệm công nghệ 6G tại Việt Nam...</p>
-                                    <span class="news-time">2 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe3.jpg" alt="Tin mới 3">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Startup công nghệ gọi vốn thành công 10 triệu USD</h3>
-                                    <p>Một startup Việt vừa gọi vốn thành công từ quỹ đầu tư quốc tế...</p>
-                                    <span class="news-time">3 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe4.jpg" alt="Tin mới 4">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Ra mắt điện thoại gập thế hệ mới</h3>
-                                    <p>Mẫu điện thoại gập mới nhất vừa được giới thiệu với nhiều tính năng nổi bật...</p>
-                                    <span class="news-time">4 giờ trước</span>
-                                </div>
-                            </article>
-                        </div>
-                    </section>
-                    <section class="latest-news">
-                        <h2>Tin xem nhiều</h2>
-                        <div class="news-grid">
+                            <div class="category-title">Thời sự</div>
                             <article class="news-card">
                                 <a href="#">
                                     <div class="news-image">
-                                        <img src="news1.jpg" alt="Trump Musk">
+                                        <img src="" alt="Thời sự">
                                     </div>
                                     <div class="news-content">
-                                        
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
                                     </div>
                                 </a>
                             </article>
-    
                             <article class="news-card">
                                 <a href="#">
                                     <div class="news-image">
-                                        <img src="news2.jpg" alt="Lê Hoàng Hiệp">
+                                        <img src="" alt="Thời sự">
                                     </div>
                                     <div class="news-content">
-                                        
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
                                     </div>
                                 </a>
-                            </article>
-    
-                            <article class="news-card">
-                                <a href="#">
-                                    <div class="news-image">
-                                        <img src="news3.jpg" alt="Ukraine">
-                                    </div>
-                                    <div class="news-content">
-                                    </div>
-                                </a>
-                            </article>
-    
-                            <article class="news-card">
-                                <a href="#">
-                                    <div class="news-image">
-                                        <img src="news4.jpg" alt="Quân đội Thái Lan">
-                                    </div>
-                                    <div class="news-content">
-                                    </div>
-                                </a>
-                            </article>
-                        </div>
-                    </section>
-                    <section class="entertainment">
-                        
-                        <div class="news-list category-news-list">
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/giaitri1.jpg" alt="Giải trí 1">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Ca sĩ nổi tiếng ra mắt MV mới</h3>
-                                    <p>MV mới của ca sĩ nổi tiếng nhanh chóng đạt triệu lượt xem chỉ sau vài giờ phát hành...</p>
-                                    <span class="news-time">9 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/giaitri2.jpg" alt="Giải trí 2">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Phim Việt Nam thắng lớn tại liên hoan phim quốc tế</h3>
-                                    <p>Bộ phim Việt Nam vừa giành giải thưởng lớn tại một liên hoan phim quốc tế danh giá...</p>
-                                    <span class="news-time">10 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/giaitri3.jpg" alt="Giải trí 3">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Hoa hậu Việt Nam đăng quang Miss World</h3>
-                                    <p>Đại diện Việt Nam đã xuất sắc đăng quang tại cuộc thi Miss World năm nay...</p>
-                                    <span class="news-time">11 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/giaitri4.jpg" alt="Giải trí 4">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Liveshow ca nhạc gây quỹ từ thiện thành công</h3>
-                                    <p>Chương trình liveshow ca nhạc đã quyên góp được số tiền lớn cho các hoạt động từ thiện...</p>
-                                    <span class="news-time">12 giờ trước</span>
-                                </div>
                             </article>
                         </div>
                     </section>
 
-                    <section class="economy">
-                      
-                        <div class="news-list">
+                    <section class="kinh-te-news">
+                        <div class="news-list category-news-list">
+                            <div class="category-title">Kinh tế</div>
                             <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/kinhte1.jpg" alt="Kinh tế 1">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Thị trường chứng khoán tăng trưởng mạnh</h3>
-                                    <h3>Đội tuyển Việt Nam thắng đậm trong trận giao hữu</h3>
-                                    <p>Đội tuyển Việt Nam đã có chiến thắng ấn tượng trước đối thủ trong trận giao hữu quốc tế...</p>
-                                    <span class="news-time">7 giờ trước</span>
-                                </div>
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Kinh tế">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
                             </article>
                             <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/thethao2.jpg" alt="Thể thao 2">
-                                </div>
-                                <div class="news-content">
-                                    <h3>VĐV điền kinh phá kỷ lục SEA Games</h3>
-                                    <p>Một vận động viên điền kinh Việt Nam vừa phá kỷ lục SEA Games ở nội dung chạy 400m...</p>
-                                    <span class="news-time">8 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/thethao3.jpg" alt="Thể thao 3">
-                                </div>
-                                <div class="news-content">
-                                    <h3>CLB Hà Nội vô địch V-League</h3>
-                                    <p>CLB Hà Nội đã chính thức lên ngôi vô địch V-League mùa giải năm nay...</p>
-                                    <span class="news-time">9 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/thethao4.jpg" alt="Thể thao 4">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Đội tuyển nữ Việt Nam vào bán kết giải châu Á</h3>
-                                    <p>Đội tuyển nữ Việt Nam xuất sắc giành vé vào bán kết giải bóng đá nữ châu Á...</p>
-                                    <span class="news-time">10 giờ trước</span>
-                                </div>
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Kinh tế">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
                             </article>
                         </div>
                     </section>
 
-                    <section class="politics">
-                    
+                    <section class="giai-tri-news">
                         <div class="news-list category-news-list">
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/thoisu1.jpg" alt="Thời sự 1">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Chính phủ ban hành nghị quyết mới về phát triển kinh tế</h3>
-                                    <p>Nghị quyết mới của Chính phủ tập trung vào các giải pháp thúc đẩy tăng trưởng kinh tế bền vững...</p>
-                                    <span class="news-time">2 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/thoisu2.jpg" alt="Thời sự 2">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Hà Nội tổ chức lễ hội văn hóa truyền thống</h3>
-                                    <p>Lễ hội văn hóa truyền thống thu hút đông đảo người dân và du khách tham dự...</p>
-                                    <span class="news-time">1 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/thoisu3.jpg" alt="Thời sự 3">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Thủ tướng dự hội nghị quốc tế về biến đổi khí hậu</h3>
-                                    <p>Thủ tướng Việt Nam tham dự và phát biểu tại hội nghị quốc tế về biến đổi khí hậu...</p>
-                                    <span class="news-time">3 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/thoisu4.jpg" alt="Thời sự 4">
-                                </div>
-                                <div class="news-content">
-                                    <h3>TP.HCM triển khai dự án giao thông thông minh</h3>
-                                    <p>Thành phố Hồ Chí Minh bắt đầu triển khai dự án giao thông thông minh nhằm giảm ùn tắc...</p>
-                                    <span class="news-time">4 giờ trước</span>
-                                </div>
-                            </article>
-                        </div>
-                    </section>
-                    <section class="latest-news">
-                        <div class="news-grid">
+                            <div class="category-title">Giải trí</div>
                             <article class="news-card">
                                 <a href="#">
                                     <div class="news-image">
-                                        <img src="news1.jpg" alt="Trump Musk">
+                                        <img src="" alt="Giải trí">
                                     </div>
                                     <div class="news-content">
-                                        
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
                                     </div>
                                 </a>
                             </article>
-    
                             <article class="news-card">
                                 <a href="#">
                                     <div class="news-image">
-                                        <img src="news2.jpg" alt="Lê Hoàng Hiệp">
+                                        <img src="" alt="Giải trí">
                                     </div>
                                     <div class="news-content">
-                                        
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
                                     </div>
                                 </a>
-                            </article>
-    
-                            <article class="news-card">
-                                <a href="#">
-                                    <div class="news-image">
-                                        <img src="news3.jpg" alt="Ukraine">
-                                    </div>
-                                    <div class="news-content">
-                                    </div>
-                                </a>
-                            </article>
-    
-                            <article class="news-card">
-                                <a href="#">
-                                    <div class="news-image">
-                                        <img src="news4.jpg" alt="Quân đội Thái Lan">
-                                    </div>
-                                    <div class="news-content">
-                                    </div>
-                                </a>
-                            </article>
-                        </div>
-                    </section>
-                    <section class="tech-news">
-                        <div class="news-list category-news-list">
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe5.jpg" alt="Pháp luật 5">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Ứng dụng blockchain trong nông nghiệp</h3>
-                                    <p>Blockchain giúp minh bạch hóa chuỗi cung ứng nông sản tại Việt Nam...</p>
-                                    <span class="news-time">5 phút trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe6.jpg" alt="Pháp luật 6">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Việt Nam phát triển chip AI đầu tiên</h3>
-                                    <p>Chip AI do kỹ sư Việt Nam thiết kế đã được thử nghiệm thành công...</p>
-                                    <span class="news-time">20 phút trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe7.jpg" alt="Pháp luật 7">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Startup Việt nhận giải thưởng sáng tạo quốc tế</h3>
-                                    <p>Một startup công nghệ Việt vừa được vinh danh tại cuộc thi sáng tạo toàn cầu...</p>
-                                    <span class="news-time">1 giờ trước</span>
-                                </div>
-                            </article>
-                            <article class="news-card">
-                                <div class="news-image">
-                                    <img src="img/congnghe8.jpg" alt="Pháp luật 8">
-                                </div>
-                                <div class="news-content">
-                                    <h3>Ra mắt nền tảng học trực tuyến mới</h3>
-                                    <p>Nền tảng học trực tuyến "Made in Vietnam" vừa chính thức ra mắt với nhiều tính năng nổi bật...</p>
-                                    <span class="news-time">2 giờ trước</span>
-                                </div>
                             </article>
                         </div>
                     </section>
 
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/giaoduc1.jpg" alt="Giáo dục 1">
+                    <section class="giao-duc-news">
+                        <div class="news-list category-news-list">
+                            <div class="category-title">Giáo dục</div>
+                            <article class="news-card">
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Giáo dục">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="news-card">
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Giáo dục">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
+                            </article>
                         </div>
-                        <div class="news-content">
-                            <h3>Học sinh Việt Nam giành huy chương vàng Olympic Toán quốc tế</h3>
-                            <p>Đội tuyển học sinh Việt Nam xuất sắc đạt thành tích cao tại Olympic Toán quốc tế...</p>
-                            <span class="news-time">30 phút trước</span>
+                    </section>
+
+                    <section class="y-te-news">
+                        <div class="news-list category-news-list">
+                            <div class="category-title">Y tế</div>
+                            <article class="news-card">
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Y tế">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="news-card">
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Y tế">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
+                            </article>
                         </div>
-                    </article>
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/giaoduc2.jpg" alt="Giáo dục 2">
+                    </section>
+
+                    <section class="phap-luat-news">
+                        <div class="news-list category-news-list">
+                            <div class="category-title">Pháp luật</div>
+                            <article class="news-card">
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Pháp luật">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="news-card">
+                                <a href="#">
+                                    <div class="news-image">
+                                        <img src="" alt="Pháp luật">
+                                    </div>
+                                    <div class="news-content">
+                                        <h3></h3>
+                                        <p></p>
+                                        <span class="news-time"></span>
+                                    </div>
+                                </a>
+                            </article>
                         </div>
-                        <div class="news-content">
-                            <h3>Bộ GD&ĐT công bố quy chế thi tốt nghiệp THPT mới</h3>
-                            <p>Quy chế thi tốt nghiệp THPT năm nay có nhiều điểm mới, tạo thuận lợi cho thí sinh...</p>
-                            <span class="news-time">1 giờ trước</span>
-                        </div>
-                    </article>
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/giaoduc3.jpg" alt="Giáo dục 3">
-                        </div>
-                        <div class="news-content">
-                            <h3>Trường đại học Việt Nam lọt top 500 châu Á</h3>
-                            <p>Một trường đại học Việt Nam vừa được xếp hạng trong top 500 châu Á...</p>
-                            <span class="news-time">2 giờ trước</span>
-                        </div>
-                    </article>
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/giaoduc4.jpg" alt="Giáo dục 4">
-                        </div>
-                        <div class="news-content">
-                            <h3>Khởi động chương trình học bổng "Vì tương lai xanh"</h3>
-                            <p>Chương trình học bổng "Vì tương lai xanh" hỗ trợ học sinh nghèo vượt khó...</p>
-                            <span class="news-time">3 giờ trước</span>
-                        </div>
-                    </article>
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/yte1.jpg" alt="Y tế 1">
-                        </div>
-                        <div class="news-content">
-                            <h3>Bộ Y tế cảnh báo dịch sốt xuất huyết tăng mạnh</h3>
-                            <p>Số ca mắc sốt xuất huyết tăng nhanh tại nhiều địa phương trên cả nước...</p>
-                            <span class="news-time">20 phút trước</span>
-                        </div>
-                    </article>
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/yte2.jpg" alt="Y tế 2">
-                        </div>
-                        <div class="news-content">
-                            <h3>Việt Nam sản xuất thành công vaccine cúm mùa</h3>
-                            <p>Vaccine cúm mùa "Made in Vietnam" đã được cấp phép lưu hành toàn quốc...</p>
-                            <span class="news-time">1 giờ trước</span>
-                        </div>
-                    </article>
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/yte3.jpg" alt="Y tế 3">
-                        </div>
-                        <div class="news-content">
-                            <h3>Bệnh viện tuyến huyện triển khai phẫu thuật nội soi</h3>
-                            <p>Nhiều bệnh viện tuyến huyện đã triển khai thành công kỹ thuật phẫu thuật nội soi hiện đại...</p>
-                            <span class="news-time">2 giờ trước</span>
-                        </div>
-                    </article>
-                    <article class="news-card">
-                        <div class="news-image">
-                            <img src="img/yte4.jpg" alt="Y tế 4">
-                        </div>
-                        <div class="news-content">
-                            <h3>Khám sức khỏe miễn phí cho người cao tuổi</h3>
-                            <p>Nhiều địa phương tổ chức chương trình khám sức khỏe miễn phí cho người cao tuổi...</p>
-                            <span class="news-time">3 giờ trước</span>
-                        </div>
-                    </article>
+                    </section>
                 </div>
             </div>
 
             <aside class="right-sidebar">
-                <div class="weather-widget">
-                    <h3>Thời tiết</h3>
+                <div class="sidebar-section nuoiem-section">
+                    <h3>
+                        <img src="img/banner/nuoiemlogo.png" alt="Nuôi Em Logo" class="nuoiem-logo">
+                        Dự án Nuôi Em Mộc Châu
+                    </h3>
+                    <div class="nuoiem-content">
+                        <img src="img/banner/nuoiem.png" alt="Trẻ em Mộc Châu" class="nuoiem-main-img">
+                        <div class="nuoiem-desc">
+                            <p>
+                                <span class="nuoiem-highlight">Chung tay nuôi dưỡng và hỗ trợ trẻ em vùng cao Mộc Châu đến trường.</span>
+                                <br>
+                                Hãy cùng góp sức vì tương lai các em nhỏ! Mỗi đóng góp là một hy vọng cho trẻ em nghèo vượt khó.
+                            </p>
+                            <a href="https://nuoiem.com" target="_blank" class="nuoiem-btn">Tìm hiểu thêm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="weather-widget modern-weather-widget glassmorphism">
+                    <h3>
+                        <i class="fas fa-cloud-sun" style="margin-right:6px"></i>Thời tiết
+                    </h3>
                     <div class="weather-content">
                         <select id="citySelect" class="city-select">
-                            <option value="Hà Nội">Hà Nội</option>
-                            <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
-                            <option value="Đà Nẵng">Đà Nẵng</option>
+                            <option value="Hanoi">Hà Nội</option>
+                            <option value="Ho Chi Minh City">TP. Hồ Chí Minh</option>  
                             <option value="Hải Phòng">Hải Phòng</option>
-                            <option value="Cần Thơ">Cần Thơ</option>
-                            <option value="Nghệ An">Nghệ An</option>
-                            <option value="Thanh Hóa">Thanh Hóa</option>
-                            <option value="Bình Dương">Bình Dương</option>
-                            <option value="Đồng Nai">Đồng Nai</option>
-                            <option value="Quảng Ninh">Quảng Ninh</option>
-                            <!-- Thêm các tỉnh/thành khác nếu muốn -->
+                            <option value="Can Tho">Cần Thơ</option>
+                            <option value="Da Lat, VN">Đà Lạt</option>
+                            <option value="Thanh Hóa, VN">Thanh Hóa</option>
+                            <option value="Bình Dương, VN">Bình Dương</option>
+                            <option value="Cà Mau, VN">Cà Mau</option>
+                            <option value="An Giang, VN">An Giang</option>
+                            <option value="Soc Trang">Sóc Trăng</option>
+                            <option value="Nha Trang, VN">Nha Trang</option>
+                            <option value="Vinh, VN">Vinh</option>
+                            <option value="Quy Nhon, VN">Quy Nhơn</option>
                         </select>
                         <div class="current-weather">
-                            <div class="weather-icon">
-                                <img src="" alt="Weather Icon" id="weatherIcon">
-                            </div>
                             <div class="weather-details">
                                 <div class="location" id="cityName">Hà Nội</div>
                                 <div class="temperature" id="temperature">--°C</div>
+                                <div class="weather-visual">
+                                    <div class="weather-effect" id="weatherEffect"></div>
+                                    <img src="" alt="Weather Icon" id="weatherIconLarge" class="weather-icon-large">
+                                </div>
                                 <div class="condition" id="weatherDescription">--</div>
                                 <div class="humidity" id="humidity">Độ ẩm: --%</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-news">
-                    <h3>Tin mới nhận</h3>
-                    <div class="sidebar-news-list">
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="news2.jpg" alt="Quảng Trị">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="news3.jpg" alt="Xe khách">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="news4.jpg" alt="OCOP">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="news5.jpg" alt="Tin 5">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="news6.jpg" alt="Tin 6">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="news7.jpg" alt="Tin 7">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                    </div>
-                </div>
-                <div class="sidebar-section">
-                    <h3>Hình ảnh nổi bật</h3>
-                    <div class="image-slider">
+                <div class="sidebar-section featured-image-slider-section">
+                    <h3>
+                        <i class="fas fa-images" style="color:#1976d2;margin-right:6px"></i>
+                        Hình ảnh nổi bật
+                    </h3>
+                    <div class="image-slider" id="featuredImageSlider">
                         <div class="slider-container">
-                            <img src="https://via.placeholder.com/300x200?text=Image+1" alt="Slider Image 1" class="active">
-                            <img src="https://via.placeholder.com/300x200?text=Image+2" alt="Slider Image 2">
-                            <img src="https://via.placeholder.com/300x200?text=Image+3" alt="Slider Image 3">
+                            <img src="img/NoiBat/HCM1.png" alt="Slider Image 1" class="slider-img active">
+                            <img src="img/NoiBat/HCM2.png" alt="Slider Image 2" class="slider-img">
+                            <img src="img/NoiBat/HCM3.png" alt="Slider Image 3" class="slider-img">
                         </div>
                         <div class="slider-dots">
                             <span class="dot active"></span>
@@ -568,46 +590,48 @@
                         </div>
                     </div>
                 </div>
-                <div class="sidebar-section">
-                    <h3>Thông tin chính phủ</h3>
-                    <div class="gov-info">
-                        <a href="https://chinhphu.vn" target="_blank">Cổng thông tin điện tử Chính phủ</a>
-                        <a href="https://mof.gov.vn" target="_blank">Bộ Tài chính</a>
-                        <a href="https://moj.gov.vn" target="_blank">Bộ Tư pháp</a>
-                        <a href="https://moh.gov.vn" target="_blank">Bộ Y tế</a>
-                        <a href="https://moet.gov.vn" target="_blank">Bộ Giáo dục và Đào tạo</a>
-                    </div>
-                </div>
-                <div class="sidebar-section">
-                    <h3>Quảng cáo</h3>
-                    <div class="advertisement">
-                        <img src="https://via.placeholder.com/300x250?text=Ads" alt="Advertisement">
+                <div class="sidebar-section gov-section-vn">
+                    <h3>
+                        <span style="color:#c62828;"><i class="fas fa-flag"></i></span>
+                        Thông tin chính phủ
+                    </h3>
+                    <div class="gov-info gov-info-vn">
+                        <a href="https://chinhphu.vn" target="_blank">
+                            <img src="img/banner/coVN.png" alt="VN Flag" class="vn-flag">
+                            Cổng thông tin điện tử Chính phủ
+                        </a>
+                        <a href="https://mof.gov.vn" target="_blank">
+                            <i class="fas fa-coins"></i> Bộ Tài chính
+                        </a>
+                        <a href="https://moj.gov.vn" target="_blank">
+                            <i class="fas fa-balance-scale"></i> Bộ Tư pháp
+                        </a>
+                        <a href="https://moh.gov.vn" target="_blank">
+                            <i class="fas fa-briefcase-medical"></i> Bộ Y tế
+                        </a>
+                        <a href="https://moet.gov.vn" target="_blank">
+                            <i class="fas fa-graduation-cap"></i> Bộ Giáo dục và Đào tạo
+                        </a>
                     </div>
                 </div>
                 <div class="sidebar-news">
-                    <h3>Tin tức khác</h3>
+                    <h3>Tin mới nhận</h3>
                     <div class="sidebar-news-list">
                         <article class="sidebar-news-item">
                             <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=News" alt="Tin 1">
+                                <img src="https://via.placeholder.com/80x60?text=News" alt="Quảng Trị">
                             </div>
                             <div class="news-content"></div>
                         </article>
                         <article class="sidebar-news-item">
                             <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=News" alt="Tin 2">
+                                <img src="https://via.placeholder.com/80x60?text=News" alt="Xe khách">
                             </div>
                             <div class="news-content"></div>
                         </article>
                         <article class="sidebar-news-item">
                             <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=News" alt="Tin 3">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=News" alt="Tin 4">
+                                <img src="https://via.placeholder.com/80x60?text=News" alt="OCOP">
                             </div>
                             <div class="news-content"></div>
                         </article>
@@ -629,41 +653,6 @@
                             </div>
                             <div class="news-content"></div>
                         </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=News" alt="Tin 8">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                    </div>
-                </div>
-                <div class="sidebar-section">
-                    <h3>Tin tức Y tế</h3>
-                    <div class="sidebar-news-list">
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=Y+Tế" alt="Y tế 1">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=Y+Tế" alt="Y tế 2">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=Y+Tế" alt="Y tế 3">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
-                        <article class="sidebar-news-item">
-                            <div class="news-image">
-                                <img src="https://via.placeholder.com/80x60?text=Y+Tế" alt="Y tế 4">
-                            </div>
-                            <div class="news-content"></div>
-                        </article>
                     </div>
                 </div>
             </aside>
@@ -680,11 +669,12 @@
                 <div class="footer-col">
                     <h3>Chuyên mục</h3>
                     <ul>
-                        <li><a href="/thoi-su">Thời sự</a></li>
-                        <li><a href="/kinh-te">Kinh tế</a></li>
-                        <li><a href="/the-thao">Thể thao</a></li>
-                        <li><a href="/giai-tri">Giải trí</a></li>
-                        <li><a href="/cong-nghe">Công nghệ</a></li>
+                        <li><a href="thoi-su.html">Thời sự</a></li>
+                        <li><a href="kinh-te.html">Kinh tế</a></li>
+                        <li><a href="the-thao.html">Thể thao</a></li>
+                        <li><a href="phap-luat.html"></a>Pháp luật</li>
+                        <li><a href="giao-duc.html">Giáo dục</a></li>
+                        <li><a href="y-te.html">Y tế</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -715,11 +705,178 @@
             </div>
         </div>
     </footer>
-
     <!-- Scripts -->
-    <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/inject-modals.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/news-api.js"></script>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Đăng nhập</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
+                </div>
+                <button type="submit" class="btn-login">Đăng nhập</button>
+                <p>Chưa có tài khoản? <a href="#" id="showRegister">Đăng ký</a></p>
+                <p><a href="#" id="showForgotPassword">Quên mật khẩu?</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Đăng ký</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="registerName" placeholder="Họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerPassword" placeholder="Mật khẩu" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu" required>
+                </div>
+                <button type="submit" class="btn-register">Đăng ký</button>
+                <p>Đã có tài khoản? <a href="#" id="showLogin">Đăng nhập</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Quên mật khẩu</h2>
+            <form id="forgotPasswordForm">
+                <div class="form-group">
+                    <input type="email" id="resetEmail" placeholder="Email" required>
+                </div>
+                <button type="submit" class="btn-reset">Gửi link đặt lại mật khẩu</button>
+                <p><a href="#" id="backToLogin">Quay lại đăng nhập</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Thông tin tài khoản -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeAccountModal">&times;</span>
+            <h2>Thông tin tài khoản</h2>
+            <form id="accountForm">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="accountEmail" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Tên người dùng</label>
+                    <input type="text" id="accountName" required>
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="tel" id="accountPhone">
+                </div>
+                <button type="submit" class="btn btn-register">Lưu thông tin</button>
+            </form>
+            <button class="btn btn-reset" id="changePasswordBtn" style="margin-top:16px;">Đổi mật khẩu</button>
+        </div>
+    </div>
+
+    <!-- Modal Đổi mật khẩu -->
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeChangePasswordModal">&times;</span>
+            <h2>Đổi mật khẩu</h2>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label>Mật khẩu hiện tại</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu mới</label>
+                    <input type="password" id="newPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu mới</label>
+                    <input type="password" id="confirmNewPassword" required>
+                </div>
+                <button type="submit" class="btn btn-login">Xác nhận đổi mật khẩu</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { ThemeManager } from './js/theme.js';
+
+    // Initialize theme manager
+    ThemeManager.init();
+
+    // Auth state observer
+    onAuthStateChanged(auth, user => {
+        const authButtons = document.getElementById('authButtons');
+        const userMenu = document.getElementById('userMenu');
+        const userEmail = document.getElementById('userEmail');
+
+        if (user) {
+            authButtons.style.display = 'none';
+            userMenu.style.display = 'block';
+            userEmail.textContent = user.email;
+        } else {
+            authButtons.style.display = 'flex';
+            userMenu.style.display = 'none';
+        }
+    });
+
+    // User menu toggle
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+
+    userMenuBtn.addEventListener('click', () => {
+        userDropdown.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+    });
+
+    // Logout handler
+    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error('Lỗi đăng xuất:', error);
+        }
+    });
+
+    // Login/Register button handlers
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        // Show login modal
+    });
+
+    document.getElementById('registerBtn').addEventListener('click', () => {
+        // Show register modal
+    });
+    </script>
 </body>
 </html>
