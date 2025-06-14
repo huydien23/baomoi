@@ -96,12 +96,13 @@ document.addEventListener("click", (e) => {
 });
 
 // Handle logout
-logoutBtn.addEventListener("click", (e) => {
+logoutBtn?.addEventListener("click", (e) => {
   e.preventDefault();
   signOut(auth)
     .then(() => {
       showToast("Đăng xuất thành công!");
       updateUI(null);
+      window.location.href = "index.html";
     })
     .catch((error) => {
       showToast("Lỗi đăng xuất: " + error.message, true);
@@ -112,13 +113,23 @@ logoutBtn.addEventListener("click", (e) => {
 function updateUI(user) {
   if (user) {
     // User is signed in
-    loginBtn.innerHTML = `<i class="fas fa-user"></i> ${user.email}`;
-    userEmail.textContent = user.email;
-    dropdownMenu.style.display = "none";
+    if (loginBtn) {
+      loginBtn.innerHTML = `<i class="fas fa-user"></i> ${user.email}`;
+    }
+    if (userEmail) {
+      userEmail.textContent = user.email;
+    }
+    if (dropdownMenu) {
+      dropdownMenu.style.display = "none";
+    }
   } else {
     // User is signed out
-    loginBtn.innerHTML = '<i class="fas fa-user"></i> Đăng nhập';
-    dropdownMenu.style.display = "none";
+    if (loginBtn) {
+      loginBtn.innerHTML = '<i class="fas fa-user"></i> Đăng nhập';
+    }
+    if (dropdownMenu) {
+      dropdownMenu.style.display = "none";
+    }
   }
 }
 
@@ -181,8 +192,20 @@ loginForm.addEventListener("submit", (e) => {
   const password = document.getElementById("loginPassword").value;
 
   signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Login successful
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      const userRef = ref(database, "users/" + user.uid);
+      const snapshot = await get(userRef);
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        if (userData.role == 2) {
+          window.location.replace("admin.html"); // dùng replace để không lưu lại trang chủ trong lịch sử
+        } else {
+          window.location.replace("index.html");
+        }
+      } else {
+        window.location.replace("index.html");
+      }
       loginModal.style.display = "none";
       showToast("Đăng nhập thành công!");
     })
@@ -197,6 +220,7 @@ registerForm.addEventListener("submit", (e) => {
   const email = document.getElementById("registerEmail").value;
   const password = document.getElementById("registerPassword").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
+  const name = document.getElementById("registerName").value; // Lấy họ tên
 
   if (password !== confirmPassword) {
     showToast("Mật khẩu không khớp!", true);
@@ -205,16 +229,19 @@ registerForm.addEventListener("submit", (e) => {
 
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Registration successful
       const user = userCredential.user;
-      // Lưu thông tin user vào Realtime Database
-      set(ref(database, "users/" + user.uid), {
-        email: user.email,
-        displayName: user.displayName || "",
-        createdAt: new Date().toISOString(),
+      // Cập nhật displayName trên Firebase Auth
+      updateProfile(user, { displayName: name }).then(() => {
+        // Lưu thông tin user vào Realtime Database
+        set(ref(database, "users/" + user.uid), {
+          email: user.email,
+          displayName: name,
+          createdAt: new Date().toISOString(),
+          role: 1, // role mặc định user là 1
+        });
+        registerModal.style.display = "none";
+        showToast("Đăng ký thành công!");
       });
-      registerModal.style.display = "none";
-      showToast("Đăng ký thành công!");
     })
     .catch((error) => {
       showToast("Lỗi đăng ký: " + error.message, true);
