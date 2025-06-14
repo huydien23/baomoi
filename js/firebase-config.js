@@ -2,6 +2,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+import {
+  getDatabase,
+  ref,
+  set,
+  update,
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -12,12 +18,13 @@ const firebaseConfig = {
   storageBucket: "bao24h-a72a6.firebasestorage.app",
   messagingSenderId: "749274721600",
   appId: "1:749274721600:web:4f0bb62127d258e2411ea5",
-  measurementId: "G-GB82V42LBL"
+  measurementId: "G-GB82V42LBL",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const database = getDatabase(app);
 
-export { auth }; 
+export { auth, database };
