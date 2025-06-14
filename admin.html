@@ -806,9 +806,7 @@
                 <div class="admin-header">
                     <h1><i class="fas fa-shield-alt"></i> Quản trị hệ thống</h1>
                     <p>Duyệt tin tức và quản lý người dùng</p>
-                </div>
-
-                <div class="admin-tabs">
+                </div>                <div class="admin-tabs">
                     <div class="admin-tab active" data-tab="newsFeed">
                         <i class="fas fa-rss"></i>
                         <span>Duyệt tin RSS</span>
@@ -816,6 +814,10 @@
                     <div class="admin-tab" data-tab="approvedNews">
                         <i class="fas fa-check-circle"></i>
                         <span>Tin đã duyệt</span>
+                    </div>
+                    <div class="admin-tab" data-tab="displayedNews">
+                        <i class="fas fa-tv"></i>
+                        <span>Tin đang hiển thị</span>
                     </div>
                     <div class="admin-tab" data-tab="userManagement">
                         <i class="fas fa-users"></i>
@@ -898,6 +900,59 @@
                             <!-- Dữ liệu tin đã duyệt sẽ được load vào đây -->
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Tab tin đang hiển thị -->
+                <div id="displayedNews" class="admin-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-tv"></i>
+                        Quản lý tin đang hiển thị trên giao diện
+                    </h2>
+
+                    <div class="controls-section">
+                        <div class="search-bar">
+                            <select id="categoryFilter">
+                                <option value="">-- Tất cả chuyên mục --</option>
+                                <option value="tin-moi">Tin mới</option>
+                                <option value="thoi-su">Thời sự</option>
+                                <option value="kinh-te">Kinh tế</option>
+                                <option value="phap-luat">Pháp luật</option>
+                                <option value="giai-tri">Giải trí</option>
+                                <option value="giao-duc">Giáo dục</option>
+                                <option value="y-te">Y tế</option>
+                                <option value="the-thao">Thể thao</option>
+                            </select>
+                            <input type="text" id="searchDisplayed" placeholder="Tìm kiếm tin đang hiển thị...">
+                            <button id="searchDisplayedBtn">
+                                <i class="fas fa-search"></i> Tìm kiếm
+                            </button>
+                            <button id="refreshDisplayedBtn" class="btn btn-info">
+                                <i class="fas fa-sync-alt"></i> Làm mới
+                            </button>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button id="publishSelectedBtn" class="btn btn-success">
+                                <i class="fas fa-broadcast-tower"></i> Đăng tin đã chọn lên giao diện
+                            </button>
+                            <button id="hideSelectedBtn" class="btn btn-warning">
+                                <i class="fas fa-eye-slash"></i> Ẩn tin đã chọn
+                            </button>
+                            <button id="deleteSelectedBtn" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i> Xóa tin đã chọn
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="news-grid" id="displayedNewsGrid" style="padding: 25px;">
+                        <!-- Dữ liệu tin đang hiển thị sẽ được load vào đây -->
+                    </div>
+
+                    <div id="displayedNewsPreview" class="news-preview" style="display: none;">
+                        <div class="preview-header">
+                            <i class="fas fa-eye"></i> Xem trước tin đang hiển thị
+                        </div>
+                        <div id="displayedPreviewContent" class="preview-content"></div>
+                    </div>
                 </div>
 
                 <!-- Tab quản lý người dùng -->
@@ -1314,6 +1369,154 @@
             }
         }
 
+        // Load danh sách tin đang hiển thị
+        async function loadDisplayedNews() {
+            const displayedNewsRef = ref(db, 'approvedNews');
+            try {
+                const snapshot = await get(displayedNewsRef);
+                if (snapshot.exists()) {
+                    const displayedNews = snapshot.val();
+                    const grid = document.getElementById('displayedNewsGrid');
+                    grid.innerHTML = '';
+
+                    // Sort by approved date (newest first)
+                    const sortedNews = Object.entries(displayedNews)
+                        .map(([key, news]) => ({ id: key, ...news }))
+                        .sort((a, b) => new Date(b.approvedAt) - new Date(a.approvedAt));
+
+                    sortedNews.forEach(news => {
+                        const card = document.createElement('div');
+                        card.className = 'news-card';
+
+                        card.innerHTML = `
+                            <div class="news-image">
+                                <img src="${news.image || 'img/default-news.png'}" alt="${news.title}" onerror="this.src='img/default-news.png'">
+                                <div class="news-source-badge">${news.source}</div>
+                            </div>
+                            <div class="news-content">
+                                <h3 class="news-title">${news.title}</h3>
+                                <p class="news-description">${news.description}</p>
+                                <div class="news-meta">
+                                    <span><i class="fas fa-calendar"></i> ${new Date(news.pubDate).toLocaleDateString('vi-VN')}</span>
+                                    <span><i class="fas fa-clock"></i> ${new Date(news.pubDate).toLocaleTimeString('vi-VN')}</span>
+                                </div>
+                                <div class="news-actions">
+                                    <button class="btn btn-info btn-preview" data-id="${encodeURIComponent(JSON.stringify(news))}">
+                                        <i class="fas fa-eye"></i> Xem
+                                    </button>
+                                    <button class="btn btn-danger btn-hide" data-id="${news.id}">
+                                        <i class="fas fa-eye-slash"></i> Ẩn
+                                    </button>
+                                    <button class="btn btn-danger btn-delete" data-id="${news.id}">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        grid.appendChild(card);
+
+                        // Thêm event listener cho nút xem trước
+                        card.querySelector('.btn-preview').addEventListener('click', (e) => {
+                            const newsData = JSON.parse(decodeURIComponent(e.target.getAttribute('data-id')));
+                            showDisplayedNewsPreview(newsData);
+                        });
+
+                        // Thêm event listener cho nút ẩn
+                        card.querySelector('.btn-hide').addEventListener('click', () => {
+                            hideDisplayedNews(news.id);
+                            card.remove();
+                        });
+
+                        // Thêm event listener cho nút xóa
+                        card.querySelector('.btn-delete').addEventListener('click', () => {
+                            card.classList.add('fade-out');
+                            setTimeout(() => card.remove(), 300);
+                        });
+                    });
+                } else {
+                    document.getElementById('displayedNewsGrid').innerHTML = '<p>Không có tin nào đang hiển thị</p>';
+                }
+            } catch (error) {
+                console.error('Lỗi khi tải tin đang hiển thị:', error);
+                alert('Lỗi khi tải tin đang hiển thị: ' + error.message);
+            }
+        }
+
+        // Hiển thị xem trước tin đang hiển thị
+        function showDisplayedNewsPreview(news) {
+            const previewDiv = document.getElementById('displayedNewsPreview');
+            const previewContent = document.getElementById('displayedPreviewContent');
+
+            previewDiv.style.display = 'block';
+
+            previewContent.innerHTML = `
+                <h2>${news.title}</h2>
+                <p><strong>Nguồn:</strong> ${news.source}</p>
+                <p><strong>Chuyên mục:</strong> ${getCategoryName(news.category)}</p>
+                <p><strong>Ngày duyệt:</strong> ${new Date(news.approvedAt).toLocaleString('vi-VN')}</p>
+                <p><strong>Người duyệt:</strong> ${news.approvedByName}</p>
+                ${news.image ? `<img src="${news.image}" alt="${news.title}">` : ''}
+                <div class="description">${news.description}</div>
+                <p><a href="${news.link}" target="_blank">Xem bài gốc</a></p>
+            `;
+
+            // Scroll to preview
+            previewDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Đăng tin đã chọn lên giao diện
+        async function publishSelectedNews(newsIds) {
+            if (!confirm('Bạn có chắc chắn muốn đăng tin đã chọn lên giao diện?')) {
+                return;
+            }
+
+            try {
+                for (const newsId of newsIds) {
+                    const newsRef = ref(db, `approvedNews/${newsId}`);
+                    await update(newsRef, { status: 'published' });
+                }
+                alert('Đăng tin thành công!');
+                loadDisplayedNews();
+            } catch (error) {
+                console.error('Lỗi khi đăng tin:', error);
+                alert('Lỗi khi đăng tin: ' + error.message);
+            }
+        }
+
+        // Ẩn tin đã chọn
+        async function hideDisplayedNews(newsId) {
+            if (!confirm('Bạn có chắc chắn muốn ẩn tin này khỏi giao diện?')) {
+                return;
+            }
+
+            try {
+                const newsRef = ref(db, `approvedNews/${newsId}`);
+                await update(newsRef, { status: 'hidden' });
+                alert('Ẩn tin thành công!');
+            } catch (error) {
+                console.error('Lỗi khi ẩn tin:', error);
+                alert('Lỗi khi ẩn tin: ' + error.message);
+            }
+        }
+
+        // Xóa tin đã chọn
+        async function deleteDisplayedNews(newsId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa tin này?')) {
+                return;
+            }
+
+            try {
+                const newsRef = ref(db, `approvedNews/${newsId}`);
+                await remove(newsRef);
+                alert('Xóa tin thành công!');
+                loadDisplayedNews();
+            } catch (error) {
+                console.error('Lỗi khi xóa tin:', error);
+                alert('Lỗi khi xóa tin: ' + error.message);
+            }
+        }
+
         // Load danh sách người dùng
         async function loadUsers() {
             const usersRef = ref(db, 'users');
@@ -1502,76 +1705,178 @@
             }
         });
 
-        // Tìm kiếm người dùng
-        document.getElementById('searchUserBtn').addEventListener('click', async () => {
-            const searchTerm = document.getElementById('searchUser').value.toLowerCase();
-            const usersRef = ref(db, 'users');
+        // Tìm kiếm tin đang hiển thị
+        document.getElementById('searchDisplayedBtn').addEventListener('click', async () => {
+            const searchTerm = document.getElementById('searchDisplayed').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const displayedNewsRef = ref(db, 'approvedNews');
 
             try {
-                const snapshot = await get(usersRef);
+                const snapshot = await get(displayedNewsRef);
                 if (snapshot.exists()) {
-                    const users = snapshot.val();
-                    const userList = document.getElementById('userList');
-                    userList.innerHTML = '';
+                    const displayedNews = snapshot.val();
+                    const grid = document.getElementById('displayedNewsGrid');
+                    grid.innerHTML = '';
 
-                    const filteredUsers = Object.entries(users)
-                        .filter(([userId, userData]) =>
-                            (userData.email && userData.email.toLowerCase().includes(searchTerm)) ||
-                            (userData.displayName && userData.displayName.toLowerCase().includes(searchTerm))
-                        );
+                    const filteredNews = Object.entries(displayedNews)
+                        .map(([key, news]) => ({ id: key, ...news }))
+                        .filter(news => {
+                            const matchesSearchTerm = news.title.toLowerCase().includes(searchTerm) || news.description.toLowerCase().includes(searchTerm);
+                            const matchesCategory = categoryFilter ? news.category === categoryFilter : true;
+                            return matchesSearchTerm && matchesCategory;
+                        })
+                        .sort((a, b) => new Date(b.approvedAt) - new Date(a.approvedAt));
 
-                    if (filteredUsers.length === 0) {
-                        userList.innerHTML = '<p>Không tìm thấy người dùng</p>';
+                    if (filteredNews.length === 0) {
+                        grid.innerHTML = '<p>Không tìm thấy tin nào phù hợp</p>';
                         return;
                     }
 
-                    filteredUsers.forEach(([userId, userData]) => {
-                        const userCard = document.createElement('div');
-                        userCard.className = 'user-card';
+                    filteredNews.forEach(news => {
+                        const card = document.createElement('div');
+                        card.className = 'news-card';
 
-                        userCard.innerHTML = `
-                            <h3>${userData.displayName || userData.email || 'Người dùng'}
-                                ${userData.isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
-                            </h3>
-                            <p><strong>Email:</strong> ${userData.email || 'N/A'}</p>
-                            <p><strong>Ngày tạo:</strong> ${userData.createdAt ? new Date(userData.createdAt).toLocaleString('vi-VN') : 'N/A'}</p>
-                            <div class="user-actions">
-                                ${userData.isAdmin ?
-                                `<button class="btn-reject" data-id="${userId}" data-action="remove-admin">Gỡ quyền Admin</button>` :
-                                `<button class="btn-approve" data-id="${userId}" data-action="make-admin">Cấp quyền Admin</button>`
-                            }
-                                <button class="btn-delete" data-id="${userId}" data-action="delete-user">Xóa người dùng</button>
+                        card.innerHTML = `
+                            <div class="news-image">
+                                <img src="${news.image || 'img/default-news.png'}" alt="${news.title}" onerror="this.src='img/default-news.png'">
+                                <div class="news-source-badge">${news.source}</div>
+                            </div>
+                            <div class="news-content">
+                                <h3 class="news-title">${news.title}</h3>
+                                <p class="news-description">${news.description}</p>
+                                <div class="news-meta">
+                                    <span><i class="fas fa-calendar"></i> ${new Date(news.pubDate).toLocaleDateString('vi-VN')}</span>
+                                    <span><i class="fas fa-clock"></i> ${new Date(news.pubDate).toLocaleTimeString('vi-VN')}</span>
+                                </div>
+                                <div class="news-actions">
+                                    <button class="btn btn-info btn-preview" data-id="${encodeURIComponent(JSON.stringify(news))}">
+                                        <i class="fas fa-eye"></i> Xem
+                                    </button>
+                                    <button class="btn btn-danger btn-hide" data-id="${news.id}">
+                                        <i class="fas fa-eye-slash"></i> Ẩn
+                                    </button>
+                                    <button class="btn btn-danger btn-delete" data-id="${news.id}">
+                                        <i class="fas fa-trash"></i> Xóa
+                                    </button>
+                                </div>
                             </div>
                         `;
-                        userList.appendChild(userCard);
 
-                        // Add event listeners
-                        const makeAdminBtn = userCard.querySelector('[data-action="make-admin"]');
-                        if (makeAdminBtn) {
-                            makeAdminBtn.addEventListener('click', () => {
-                                updateUserAdmin(userId, true);
-                            });
-                        }
+                        grid.appendChild(card);
 
-                        const removeAdminBtn = userCard.querySelector('[data-action="remove-admin"]');
-                        if (removeAdminBtn) {
-                            removeAdminBtn.addEventListener('click', () => {
-                                updateUserAdmin(userId, false);
-                            });
-                        }
+                        // Thêm event listener cho nút xem trước
+                        card.querySelector('.btn-preview').addEventListener('click', (e) => {
+                            const newsData = JSON.parse(decodeURIComponent(e.target.getAttribute('data-id')));
+                            showDisplayedNewsPreview(newsData);
+                        });
 
-                        const deleteUserBtn = userCard.querySelector('[data-action="delete-user"]');
-                        if (deleteUserBtn) {
-                            deleteUserBtn.addEventListener('click', () => {
-                                deleteUser(userId);
-                            });
-                        }
+                        // Thêm event listener cho nút ẩn
+                        card.querySelector('.btn-hide').addEventListener('click', () => {
+                            hideDisplayedNews(news.id);
+                            card.remove();
+                        });
+
+                        // Thêm event listener cho nút xóa
+                        card.querySelector('.btn-delete').addEventListener('click', () => {
+                            card.classList.add('fade-out');
+                            setTimeout(() => card.remove(), 300);
+                        });
                     });
                 }
             } catch (error) {
-                console.error('Lỗi khi tìm kiếm người dùng:', error);
-                alert('Lỗi khi tìm kiếm người dùng: ' + error.message);
+                console.error('Lỗi khi tìm kiếm tin:', error);
+                alert('Lỗi khi tìm kiếm tin: ' + error.message);
             }
+        });
+
+        // Lọc tin theo chuyên mục
+        document.getElementById('categoryFilter').addEventListener('change', () => {
+            const selectedCategory = document.getElementById('categoryFilter').value;
+            const searchTerm = document.getElementById('searchDisplayed').value.toLowerCase();
+            const displayedNewsRef = ref(db, 'approvedNews');
+
+            try {
+                get(displayedNewsRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const displayedNews = snapshot.val();
+                        const grid = document.getElementById('displayedNewsGrid');
+                        grid.innerHTML = '';
+
+                        const filteredNews = Object.entries(displayedNews)
+                            .map(([key, news]) => ({ id: key, ...news }))
+                            .filter(news => {
+                                const matchesSearchTerm = news.title.toLowerCase().includes(searchTerm) || news.description.toLowerCase().includes(searchTerm);
+                                const matchesCategory = selectedCategory ? news.category === selectedCategory : true;
+                                return matchesSearchTerm && matchesCategory;
+                            })
+                            .sort((a, b) => new Date(b.approvedAt) - new Date(a.approvedAt));
+
+                        if (filteredNews.length === 0) {
+                            grid.innerHTML = '<p>Không tìm thấy tin nào phù hợp</p>';
+                            return;
+                        }
+
+                        filteredNews.forEach(news => {
+                            const card = document.createElement('div');
+                            card.className = 'news-card';
+
+                            card.innerHTML = `
+                                <div class="news-image">
+                                    <img src="${news.image || 'img/default-news.png'}" alt="${news.title}" onerror="this.src='img/default-news.png'">
+                                    <div class="news-source-badge">${news.source}</div>
+                                </div>
+                                <div class="news-content">
+                                    <h3 class="news-title">${news.title}</h3>
+                                    <p class="news-description">${news.description}</p>
+                                    <div class="news-meta">
+                                        <span><i class="fas fa-calendar"></i> ${new Date(news.pubDate).toLocaleDateString('vi-VN')}</span>
+                                        <span><i class="fas fa-clock"></i> ${new Date(news.pubDate).toLocaleTimeString('vi-VN')}</span>
+                                    </div>
+                                    <div class="news-actions">
+                                        <button class="btn btn-info btn-preview" data-id="${encodeURIComponent(JSON.stringify(news))}">
+                                            <i class="fas fa-eye"></i> Xem
+                                        </button>
+                                        <button class="btn btn-danger btn-hide" data-id="${news.id}">
+                                            <i class="fas fa-eye-slash"></i> Ẩn
+                                        </button>
+                                        <button class="btn btn-danger btn-delete" data-id="${news.id}">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+
+                            grid.appendChild(card);
+
+                            // Thêm event listener cho nút xem trước
+                            card.querySelector('.btn-preview').addEventListener('click', (e) => {
+                                const newsData = JSON.parse(decodeURIComponent(e.target.getAttribute('data-id')));
+                                showDisplayedNewsPreview(newsData);
+                            });
+
+                            // Thêm event listener cho nút ẩn
+                            card.querySelector('.btn-hide').addEventListener('click', () => {
+                                hideDisplayedNews(news.id);
+                                card.remove();
+                            });
+
+                            // Thêm event listener cho nút xóa
+                            card.querySelector('.btn-delete').addEventListener('click', () => {
+                                card.classList.add('fade-out');
+                                setTimeout(() => card.remove(), 300);
+                            });
+                        });
+                    }
+                });
+            } catch (error) {
+                console.error('Lỗi khi lọc tin:', error);
+                alert('Lỗi khi lọc tin: ' + error.message);
+            }
+        });
+
+        // Load danh sách tin đang hiển thị khi trang được tải
+        window.addEventListener('load', () => {
+            loadDisplayedNews();
         });
     </script>
 </body>
