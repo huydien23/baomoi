@@ -958,20 +958,34 @@
                 <div id="newsFeed" class="admin-section active">
                     <h2 class="section-title">
                         <i class="fas fa-newspaper"></i>
-                        Duyệt tin từ nguồn RSS
+                        Cập nhật tin tức
                     </h2>
 
                     <div class="controls-section">
                         <div class="search-bar">
+                            <select id="categorySelect" class="rss-select">
+                                <option value="">-- Chọn chuyên mục --</option>
+                                <option value="tin-noi-bat">Tin nổi bật</option>
+                                <option value="thoi-su">Thời sự</option>
+                                <option value="giao-duc">Giáo dục</option>
+                                <option value="kinh-te">Kinh tế</option>
+                                <option value="phap-luat">Pháp luật</option>
+                                <option value="the-thao">Thể thao</option>
+                                <option value="y-te">Y tế</option>
+                                <option value="tin-moi">Tin mới nhất</option>
+                            </select>
                             <select id="rssSourceSelect" class="rss-select">
                                 <option value="">-- Chọn nguồn RSS --</option>
-                                <option value="https://vnexpress.net/rss/tin-moi-nhat.rss">VnExpress - Tin mới nhất
-                                </option>
+                                <option value="https://vnexpress.net/rss/tin-moi-nhat.rss">VnExpress - Tin mới nhất</option>
                                 <option value="https://tuoitre.vn/rss/tin-moi-nhat.rss">Tuổi Trẻ - Tin mới nhất</option>
                                 <option value="https://thanhnien.vn/rss/home.rss">Thanh Niên - Tin mới nhất</option>
                             </select>
+                            <input type="number" id="newsCount" min="1" max="20" value="5" placeholder="Số lượng tin">
                             <button id="loadRssBtn">
                                 <i class="fas fa-download"></i> Tải tin
+                            </button>
+                            <button id="updateNewsBtn" style="display:none;">
+                                <i class="fas fa-sync-alt"></i> Cập nhật
                             </button>
                         </div>
                     </div>
@@ -1213,6 +1227,7 @@
         let rssItems = [];
         let currentPage = 1;
         const itemsPerPage = 6;
+        let selectedItems = [];
 
         function renderRssNewsPage(page) {
             const grid = document.getElementById('rssNewsGrid');
@@ -1255,12 +1270,6 @@
                             <button class="btn btn-info btn-preview" data-id="${encodeURIComponent(JSON.stringify(item))}">
                                 <i class="fas fa-eye"></i> Xem
                             </button>
-                            <button class="btn btn-success btn-approve">
-                                <i class="fas fa-check"></i> Duyệt
-                            </button>
-                            <button class="btn btn-danger btn-reject">
-                                <i class="fas fa-times"></i> Từ chối
-                            </button>
                         </div>
                     </div>
                 `;
@@ -1272,21 +1281,11 @@
                     const itemData = JSON.parse(decodeURIComponent(e.target.getAttribute('data-id')));
                     showNewsPreview(itemData);
                 });
-
-                // Thêm event listener cho nút duyệt
-                card.querySelector('.btn-approve').addEventListener('click', () => {
-                    approveNews(item);
-                    card.remove();
-                });
-
-                // Thêm event listener cho nút từ chối
-                card.querySelector('.btn-reject').addEventListener('click', () => {
-                    card.classList.add('fade-out');
-                    setTimeout(() => card.remove(), 300);
-                });
             });
 
             renderPagination();
+            // Hiện nút cập nhật khi đã tải tin thành công
+            document.getElementById('updateNewsBtn').style.display = rssItems.length > 0 ? 'inline-block' : 'none';
         }
 
         function renderPagination() {
@@ -1310,6 +1309,8 @@
 
         document.getElementById('loadRssBtn').addEventListener('click', async () => {
             const rssUrl = document.getElementById('rssSourceSelect').value;
+            const category = document.getElementById('categorySelect').value;
+            const count = parseInt(document.getElementById('newsCount').value) || 5;
             if (!rssUrl) {
                 alert('Vui lòng chọn nguồn RSS');
                 return;
@@ -1317,13 +1318,15 @@
             document.getElementById('rssLoading').style.display = 'block';
             document.getElementById('rssNewsGrid').innerHTML = '';
             document.getElementById('pagination').innerHTML = '';
+            selectedItems = [];
+            document.getElementById('updateNewsBtn').style.display = 'none';
 
             try {
                 // Sử dụng API để fetch RSS
                 const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
                 const data = await response.json();
                 if (data.status === 'ok') {
-                    rssItems = data.items;
+                    rssItems = data.items.slice(0, count);
                     currentPage = 1;
                     renderRssNewsPage(currentPage);
                 } else {
@@ -1335,6 +1338,60 @@
             } finally {
                 document.getElementById('rssLoading').style.display = 'none';
             }
+        });
+
+        document.getElementById('updateNewsBtn').addEventListener('click', async () => {
+            if (!rssItems || rssItems.length === 0) {
+                alert('Không có tin nào để cập nhật');
+                return;
+            }
+            const category = document.getElementById('categorySelect').value;
+            if (!category) {
+                alert('Vui lòng chọn chuyên mục');
+                return;
+            }
+            let successCount = 0;
+            let failCount = 0;
+            for (const item of rssItems) {
+                try {
+                    const newsItem = {
+                        title: item.title,
+                        description: item.description.replace(/<img[^>]+>/g, '').replace(/<\/?[^>]+(>|$)/g, ''),
+                        link: item.link,
+                        image: (item.enclosure && item.enclosure.link) ? item.enclosure.link : (item.image || 'img/default-news.png'),
+                        pubDate: item.pubDate,
+                        source: getSourceName(item.link),
+                        category: category,
+                        approvedBy: currentUser.uid,
+                        approvedByName: currentUser.displayName || currentUser.email,
+                        approvedAt: new Date().toISOString(),
+                        status: 'approved'
+                    };
+                    console.log('Lưu vào approvedNews:', newsItem);
+                    const approvedRef = ref(db, 'approvedNews');
+                    const newApprovedRef = push(approvedRef);
+                    await set(newApprovedRef, newsItem);
+
+                    console.log('Lưu vào publicNews:', newsItem);
+                    const publicRef = ref(db, 'publicNews');
+                    const newPublicRef = push(publicRef);
+                    await set(newPublicRef, newsItem);
+                    successCount++;
+                } catch (err) {
+                    console.error('Lỗi khi lưu tin:', err);
+                    failCount++;
+                }
+            }
+            if (successCount > 0) {
+                alert(`Cập nhật tin thành công! (${successCount} tin)`);
+            } else {
+                alert('Không lưu được tin nào. Vui lòng kiểm tra lại quyền hoặc kết nối!');
+            }
+            if (failCount > 0) {
+                alert(`Có ${failCount} tin bị lỗi khi lưu. Xem console để biết chi tiết.`);
+            }
+            document.getElementById('updateNewsBtn').style.display = 'none';
+            loadApprovedNews();
         });
 
         // Hiển thị xem trước tin

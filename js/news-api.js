@@ -1,66 +1,86 @@
+import { ref, get, query, orderByChild, equalTo, limitToLast } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { database } from "./firebase-config.js";
+
 console.log('news-api.js loaded and executing');
 
-// Firebase Configuration (Using your actual Firebase project config)
-const firebaseConfig = {
-    apiKey: "AIzaSyABGYSGrh7ghjuE3RqeO4EJKcd0P3tzUJg",
-    authDomain: "bao24h-a72a6.firebaseapp.com",
-    databaseURL: "https://bao24h-a72a6-default-rtdb.firebaseio.com",
-    projectId: "bao24h-a72a6",
-    storageBucket: "bao24h-a72a6.firebasestorage.app",
-    messagingSenderId: "749274721600",
-    appId: "1:749274721600:web:4f0bb62127d258e2411ea5",
-    measurementId: "G-GB82V42LBL"
-};
-
-// Initialize Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const database = firebase.database();
-
-// Danh sách RSS theo mục
+// Danh sách RSS theo mục (chỉ dùng để map category, không fetch trực tiếp)
 const rssFeeds = {
     'tin-moi': {
-        url: 'https://vnexpress.net/rss/tin-moi-nhat.rss',
         section: '.latest-news .news-grid',
         count: 4
     },
     'thoi-su': {
-        url: 'https://tuoitre.vn/rss/thoi-su.rss',
         section: '.thoi-su-news .category-news-list',
         count: 2
     },
     'kinh-te': {
-        url: 'https://thanhnien.vn/rss/kinh-te.rss',
         section: '.kinh-te-news .category-news-list',
         count: 2
     },
     'phap-luat': {
-        url: 'https://vnexpress.net/rss/phap-luat.rss',
         section: '.phap-luat-news .category-news-list',
         count: 2
     },
     'giai-tri': {
-        url: 'https://vnexpress.net/rss/giai-tri.rss',
         section: '.giai-tri-news .category-news-list',
         count: 2
     },
     'giao-duc': {
-        url: 'https://tuoitre.vn/rss/giao-duc.rss',
         section: '.giao-duc-news .category-news-list',
         count: 2
     },
     'y-te': {
-        url: 'https://vnexpress.net/rss/y-te.rss',
         section: '.y-te-news .category-news-list',
         count: 2
     },
     'tin-noi-bat': {
-        url: 'https://vnexpress.net/rss/tin-noi-bat.rss',
         section: '.hot-news .main-article',
         count: 1
     }
 };
+
+function getCategoryFromUrl(url) {
+    const categoryMap = {
+        'https://vnexpress.net/rss/tin-moi-nhat.rss': 'tin-moi',
+        'https://tuoitre.vn/rss/thoi-su.rss': 'thoi-su',
+        'https://thanhnien.vn/rss/kinh-te.rss': 'kinh-te',
+        'https://vnexpress.net/rss/phap-luat.rss': 'phap-luat',
+        'https://vnexpress.net/rss/giai-tri.rss': 'giai-tri',
+        'https://tuoitre.vn/rss/giao-duc.rss': 'giao-duc',
+        'https://vnexpress.net/rss/y-te.rss': 'y-te',
+        'https://vnexpress.net/rss/tin-noi-bat.rss': 'tin-noi-bat'
+    };
+    return categoryMap[url] || 'tin-moi';
+}
+
+// Hàm lấy tin từ publicNews
+async function fetchNewsFromPublic(category) {
+    try {
+        const newsRef = ref(database, 'publicNews');
+        const newsQuery = query(
+            newsRef,
+            orderByChild('category'),
+            equalTo(category),
+            limitToLast(50)
+        );
+        const snapshot = await get(newsQuery);
+        const news = [];
+        snapshot.forEach(childSnapshot => {
+            const newsItem = childSnapshot.val();
+            news.push({ ...newsItem, id: childSnapshot.key });
+        });
+        return news.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+    } catch (error) {
+        console.error('Lỗi khi lấy tin từ publicNews:', error);
+        return [];
+    }
+}
+
+// Hàm lấy tin tức từ RSS (chỉ lấy từ publicNews, không fetch RSS thật)
+async function fetchNewsFromRSS(url) {
+    const category = getCategoryFromUrl(url);
+    return await fetchNewsFromPublic(category);
+}
 
 // --- THAY ĐỔI NGUỒN KHÔNG BỊ CHẶN ---
 const sidebarRssFeeds = [
@@ -123,69 +143,6 @@ function getSourceLogo(source) {
     return logos[source] ? `<img src="${logos[source]}" alt="${source}" class="news-source-logo">` : "";
 }
 
-async function fetchNewsFromRSS(feedUrl, count = 4) {
-    try {
-        const defaultSource = getSourceFromUrl(feedUrl);
-        
-        // Try RSS2JSON API first
-        try {
-            const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`);
-            if (!response.ok) throw new Error(`RSS2JSON API error: ${response.status}`);
-            const data = await response.json();
-            
-            if (data.status === 'ok' || data.status === 200) {
-                const filtered = data.items.filter(hasFullContent);
-                return filtered.slice(0, count).map(article => ({
-                    ...article,
-                    title: article.title ? stripHtml(article.title) : 'Không có tiêu đề',
-                    description: article.description ? stripHtml(article.description) : 'Không có mô tả',
-                    image: getArticleImage(article),
-                    source: article.source || defaultSource
-                }));
-            }
-        } catch (rss2jsonError) {
-            console.warn('RSS2JSON API failed, falling back to direct RSS fetch:', rss2jsonError);
-        }
-
-        // Fallback: Direct RSS fetch
-        const response = await fetch(feedUrl);
-        if (!response.ok) throw new Error(`RSS fetch error: ${response.status}`);
-        const text = await response.text();
-        
-        // Basic XML parsing
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(text, "text/xml");
-        const items = xmlDoc.querySelectorAll("item");
-        
-        return Array.from(items).slice(0, count).map(item => {
-            const title = item.querySelector("title")?.textContent || 'Không có tiêu đề';
-            const description = item.querySelector("description")?.textContent || 'Không có mô tả';
-            const link = item.querySelector("link")?.textContent || '#';
-            const pubDate = item.querySelector("pubDate")?.textContent || new Date().toISOString();
-            
-            // Try to extract image from description
-            let image = 'img/default-news.png';
-            const descriptionHtml = parser.parseFromString(description, "text/html");
-            const imgTag = descriptionHtml.querySelector("img");
-            if (imgTag?.src) {
-                image = imgTag.src;
-            }
-            
-            return {
-                title: stripHtml(title),
-                description: stripHtml(description),
-                link,
-                pubDate,
-                image,
-                source: defaultSource
-            };
-        });
-    } catch (error) {
-        console.error('Error fetching news:', error);
-        return [];
-    }
-}
-
 function formatTimeAgo(date) {
     const now = new Date();
     const diff = now - date;
@@ -200,9 +157,12 @@ function formatTimeAgo(date) {
 }
 
 function displayNews(articles, containerSelector) {
+    console.log('Render news for', containerSelector, articles);
     const container = document.querySelector(containerSelector);
-    if (!container) return;
-
+    if (!container) {
+        console.warn('Container not found for selector:', containerSelector);
+        return;
+    }
     container.innerHTML = articles.map(article => {
         const img = article.image || article.thumbnail || 'img/default-news.png';
         return `
