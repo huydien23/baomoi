@@ -4,25 +4,25 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/fi
 
 // Lưu tin đã đọc vào Firebase, chỉ lưu nếu chưa có link này
 async function saveToHistory(article) {
-    if (!auth.currentUser) return;
+    if (!auth.currentUser) {
+        console.log('Chưa đăng nhập, không lưu lịch sử');
+        return;
+    }
     const userId = auth.currentUser.uid;
-    const historyRef = ref(database, `readHistory/${userId}`);
-    // Kiểm tra trùng link
-    const snapshot = await onValue(ref(database, `readHistory/${userId}/`), (snapshot) => {
-        const data = snapshot.val();
-        if (data && data[article.id]) return true; // Đã có, không lưu nữa
-        return false;
-    });
-    if (snapshot) return;
-    await set(ref(database, `readHistory/${userId}/${article.id}`), article);
-    console.log('Đã lưu vào lịch sử');
+    // Tạo id duy nhất cho bài báo dựa trên link (hoặc title)
+    const articleId = btoa(unescape(encodeURIComponent(article.link))).replace(/=+$/, '');
+    const historyRef = ref(database, `readHistory/${userId}/${articleId}`);
+    // Lưu thêm thời gian xem
+    const dataToSave = { ...article, viewedAt: new Date().toISOString() };
+    await set(historyRef, dataToSave);
+    console.log('Đã lưu vào lịch sử:', dataToSave);
 }
 
 // Hiển thị tin đã đọc, phân trang 10 tin/lần
 let historyPage = 1;
 const HISTORY_PAGE_SIZE = 10;
 
-async function displayHistory(page = 1) {
+function displayHistory(page = 1) {
     if (!auth.currentUser) return;
     const userId = auth.currentUser.uid;
     let historyContainer = null;
@@ -35,61 +35,56 @@ async function displayHistory(page = 1) {
     }
     if (!historyContainer) return;
     const historyRef = ref(database, `readHistory/${userId}`);
-    try {
-        const snapshot = await onValue(historyRef, (snapshot) => {
-            const data = snapshot.val();
-            if (!data) {
-                historyContainer.innerHTML = '<p class="no-history">Bạn chưa đọc tin nào</p>';
-                return;
-            }
-            // Sắp xếp và phân trang
-            const historyArray = Object.entries(data)
-                .map(([key, value]) => ({ id: key, ...value }))
-                .sort((a, b) => new Date(b.viewedAt) - new Date(a.viewedAt));
-            const start = 0;
-            const end = page * HISTORY_PAGE_SIZE;
-            const showArray = historyArray.slice(start, end);
-            historyContainer.innerHTML = showArray.map(item => `
-                <div class="news-item">
-                    <a href="${item.link}" target="_blank" class="news-link">
-                        <div class="news-image">
-                            <img src="${item.image || 'img/default-news.png'}" alt="${item.title}" onerror="this.src='img/default-news.png'">
+    onValue(historyRef, (snapshot) => {
+        const data = snapshot.val();
+        if (!data) {
+            historyContainer.innerHTML = '<p class="no-history">Bạn chưa đọc tin nào</p>';
+            return;
+        }
+        // Sắp xếp và phân trang
+        const historyArray = Object.entries(data)
+            .map(([key, value]) => ({ id: key, ...value }))
+            .sort((a, b) => new Date(b.viewedAt) - new Date(a.viewedAt));
+        const start = 0;
+        const end = page * HISTORY_PAGE_SIZE;
+        const showArray = historyArray.slice(start, end);
+        historyContainer.innerHTML = showArray.map(item => `
+            <div class="news-item">
+                <a href="${item.link}" target="_blank" class="news-link">
+                    <div class="news-image">
+                        <img src="${item.image || 'img/default-news.png'}" alt="${item.title}" onerror="this.src='img/default-news.png'">
+                    </div>
+                    <div class="news-content">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                        <div class="article-meta">
+                            <span class="source">${item.source}</span>
+                            <span class="time">${formatTimeAgo(new Date(item.viewedAt))}</span>
                         </div>
-                        <div class="news-content">
-                            <h3>${item.title}</h3>
-                            <p>${item.description}</p>
-                            <div class="article-meta">
-                                <span class="source">${item.source}</span>
-                                <span class="time">${formatTimeAgo(new Date(item.viewedAt))}</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            `).join('');
-            // Nút xem thêm
-            if (end < historyArray.length) {
-                if (!document.getElementById('loadMoreHistory')) {
-                    const btn = document.createElement('button');
-                    btn.id = 'loadMoreHistory';
-                    btn.textContent = 'Xem thêm';
-                    btn.className = 'btn btn-login';
-                    btn.style.margin = '16px auto 0';
-                    btn.style.display = 'block';
-                    btn.onclick = function() {
-                        historyPage++;
-                        displayHistory(historyPage);
-                    };
-                    historyContainer.parentNode.appendChild(btn);
-                }
-            } else {
-                const btn = document.getElementById('loadMoreHistory');
-                if (btn) btn.remove();
+                    </div>
+                </a>
+            </div>
+        `).join('');
+        // Nút xem thêm
+        if (end < historyArray.length) {
+            if (!document.getElementById('loadMoreHistory')) {
+                const btn = document.createElement('button');
+                btn.id = 'loadMoreHistory';
+                btn.textContent = 'Xem thêm';
+                btn.className = 'btn btn-login';
+                btn.style.margin = '16px auto 0';
+                btn.style.display = 'block';
+                btn.onclick = function() {
+                    historyPage++;
+                    displayHistory(historyPage);
+                };
+                historyContainer.parentNode.appendChild(btn);
             }
-        });
-    } catch (error) {
-        console.error('Lỗi khi tải lịch sử:', error);
-        historyContainer.innerHTML = '<p class="error">Không thể tải lịch sử đọc tin</p>';
-    }
+        } else {
+            const btn = document.getElementById('loadMoreHistory');
+            if (btn) btn.remove();
+        }
+    }, { onlyOnce: false });
 }
 
 // Thêm event listener cho các link tin tức
@@ -97,12 +92,13 @@ function addHistoryListeners() {
     document.addEventListener('click', (e) => {
         const newsLink = e.target.closest('.news-link');
         if (newsLink) {
+            console.log('Đã click vào news-link', newsLink);
             const article = {
-                title: newsLink.querySelector('h3').textContent,
-                description: newsLink.querySelector('p').textContent,
+                title: newsLink.querySelector('h3')?.textContent || '',
+                description: newsLink.querySelector('p')?.textContent || '',
                 link: newsLink.href,
-                image: newsLink.querySelector('img').src,
-                source: newsLink.querySelector('.source').textContent,
+                image: newsLink.querySelector('img')?.src || '',
+                source: newsLink.querySelector('.source')?.textContent || '',
                 pubDate: new Date().toISOString()
             };
             saveToHistory(article);

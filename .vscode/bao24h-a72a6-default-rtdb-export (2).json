@@ -1,136 +1,110 @@
 {
   "approvedNews": {
-    "-OSnQ4laOZr5fTCRigvH": {
-      "approvedAt": "2025-06-15T11:49:30.656Z",
+    "-OSnudMeqRi6ySl4vHbL": {
+      "approvedAt": "2025-06-15T14:07:22.864Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Tiểu thương kinh doanh tại các chợ đầu mối như Tân Bình, Bình Tây, Soái Kình Lâm... băn khoăn, hàng bán buộc phải xuất hóa đơn và hộ kinh doanh sẽ phải đóng thuế dựa trên doanh thu đó. Nhưng thực tế hàng bị đổi, trả lại như cơm bữa... thì tính thế nào?",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/14/edit-z670510702871349fe01d5086065d8906cea55aafb5e82-1749899565586268982595-99-0-899-1280-crop-1749899614270639965962.jpeg",
-      "link": "https://thanhnien.vn/tieu-thuong-lung-tung-voi-hang-bi-doi-tra-sau-khi-xuat-hoa-don-185250614181947636.htm",
-      "pubDate": "2025-06-15 01:06:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nTrường Đại học Sư phạm Hà Nội công bố đề thi và đáp án 8 môn thi đánh giá năng lực (SPT), chiều 15/6.",
+      "image": "https://vcdn1-vnexpress.vnecdn.net/2025/06/15/sp-hn-2-1747456383-1747456387-2974-5450-1749987582.png?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=yaTMRnCnOv1d1jzdwBi0Kg",
+      "link": "https://vnexpress.net/de-va-dap-an-8-mon-thi-danh-gia-nang-luc-spt-cua-dai-hoc-su-pham-ha-noi-2025-4899113.html",
+      "pubDate": "2025-06-15 12:01:02",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Tiểu thương l&amp;uacute;ng t&amp;uacute;ng với h&amp;agrave;ng đổi trả... sau khi xuất h&amp;oacute;a đơn"
+      "title": "ĐH Sư phạm Hà Nội công bố đề và đáp án 8 môn thi đánh giá năng lực"
     },
-    "-OSnQ4sRGkTc-ZwNgofC": {
-      "approvedAt": "2025-06-15T11:49:31.095Z",
+    "-OSnudTT5i7agB7rUbx-": {
+      "approvedAt": "2025-06-15T14:07:23.301Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Giá USD trong các ngân hàng thương mại duy trì đà tăng nhưng thị trường tự do giảm mạnh.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/15/do-la-ngoc-thach-8629-16757329993851781194921-0-0-413-660-crop-17499484251021127723236.jpg",
-      "link": "https://thanhnien.vn/gia-usd-hom-nay-1562025-do-tu-do-lao-doc-nguoc-chieu-ngan-hang-185250615074430565.htm",
-      "pubDate": "2025-06-15 00:59:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nQuán bar, pub phổ biến ở Anh và có nhiều luật lệ ngầm du khách nên tìm hiểu để không bị lạc lõng trong lần đầu ghé.",
+      "image": "https://vcdn1-dulich.vnecdn.net/2025/06/15/g13ae0-1749972375-1749972421-2769-1749972426.jpg?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=XV2MaSFAp-ZBaZaBZdSdUw",
+      "link": "https://vnexpress.net/luat-ngam-trong-quan-bar-o-anh-4899071.html",
+      "pubDate": "2025-06-15 12:00:00",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Gi&amp;aacute; USD h&amp;ocirc;m nay 15.6.2025: Đ&amp;ocirc; tự do lao dốc, ngược chiều ng&amp;acirc;n h&amp;agrave;ng"
+      "title": "Luật ngầm trong quán bar ở Anh"
     },
-    "-OSnQ4zFM38PTIJVND36": {
-      "approvedAt": "2025-06-15T11:49:31.531Z",
+    "-OSnud_GeO9BYCGYJuae": {
+      "approvedAt": "2025-06-15T14:07:23.736Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Giá vàng trong nước và thế giới đồng loạt tăng cao trong tuần nhưng người mua chỉ lãi nhẹ.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/15/vang-cua-nt-17499476017321039272935-0-0-1250-2000-crop-17499476391451299066049.jpg",
-      "link": "https://thanhnien.vn/gia-vang-hom-nay-1562025-tang-hon-3-trieu-nhung-nguoi-mua-chi-lai-500000-dong-185250615073415797.htm",
-      "pubDate": "2025-06-15 00:58:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nCác mạng lưới tội phạm tinh vi dùng AI để tạo hàng nghìn sinh viên ảo, chiếm chỗ của người thật để lấy đi hàng triệu USD hỗ trợ tài chính.",
+      "image": "https://vcdn1-vnexpress.vnecdn.net/2025/06/14/sinh-vie-n-columbia-1749877691-6715-6435-1749877996.jpg?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=Fm9udoxBQwBov5sTW0MrEQ",
+      "link": "https://vnexpress.net/nan-sinh-vien-ma-tao-bang-ai-khien-dai-hoc-my-dau-dau-4898800.html",
+      "pubDate": "2025-06-15 12:00:00",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Gi&amp;aacute; v&amp;agrave;ng h&amp;ocirc;m nay 15.6.2025: Tăng hơn 3 triệu nhưng người mua chỉ l&amp;atilde;i 500.000 đồng"
+      "title": "Nạn sinh viên 'ma' tạo bằng AI khiến đại học Mỹ đau đầu"
     },
-    "-OSnQ5531eYxJRo7pDhO": {
-      "approvedAt": "2025-06-15T11:49:31.966Z",
+    "-OSnudg2Sd4wRJYQ47xN": {
+      "approvedAt": "2025-06-15T14:07:24.170Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Từ 1.7, đất nước bước sang giai đoạn mới với 34 tỉnh, TP cùng hoạt động theo mô hình chính quyền 2 cấp. Cùng với đó, hàng loạt chủ trương, chính sách mới sẽ tạo ra những động lực thúc đẩy đột phá kinh tế - xã hội.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/14/nh-thu-nghiem-mo-hinh-chinh-quyen-2-cap-tai-ubnd-q1-tphcm-va-tu-17-la-phuong-sai-gonanh-nguyen-anh-online-17499126095911394-43-0-683-1024-crop-17499126266751947922482.jpg",
-      "link": "https://thanhnien.vn/dat-nuoc-sang-trang-1852506142155015.htm",
-      "pubDate": "2025-06-14 23:07:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nTại một lớp luyện thi ở Hàn Quốc, trẻ mẫu giáo đang loay hoay học viết tiếng Anh, chuẩn bị cho kỳ thi đại học trong hơn 10 năm tới.",
+      "image": "https://vcdn1-vnexpress.vnecdn.net/2025/06/14/imrs-3-1749697220-1158-1749697-2698-2648-1749835581.jpg?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=KS0B54nOh7gXBMBRRlehQg",
+      "link": "https://vnexpress.net/luyen-thi-tu-mau-giao-o-han-quoc-4897747.html",
+      "pubDate": "2025-06-15 12:00:00",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Đất nước sang trang"
-    },
-    "-OSnQ5Bra2KXi0Uoyi0I": {
-      "approvedAt": "2025-06-15T11:49:32.402Z",
-      "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
-      "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Ứng phó với biến đổi khí hậu là việc chung của toàn cầu, nhưng trách nhiệm giữa các nước phát triển và đang phát triển trong vấn đề \"nợ xanh\" là có sự khác biệt.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/14/anh-3-17499053870651752049179-42-0-1292-2000-crop-1749905421672298326717.jpg",
-      "link": "https://thanhnien.vn/nuoc-da-va-dang-phat-trien-ai-no-xanh-nhieu-hon-185250614195123806.htm",
-      "pubDate": "2025-06-14 13:22:00",
-      "source": "",
-      "status": "approved",
-      "title": "Nước đ&amp;atilde; v&amp;agrave; đang ph&amp;aacute;t triển: Ai &amp;#039;nợ xanh&amp;#039; nhiều hơn?"
+      "title": "Luyện thi từ mẫu giáo ở Hàn Quốc"
     }
   },
   "publicNews": {
-    "-OSnQ4laOZr5fTCRigvH": {
-      "approvedAt": "2025-06-15T11:49:30.656Z",
+    "-OSnudQ3olNiinEeXQ1a": {
+      "approvedAt": "2025-06-15T14:07:22.864Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Tiểu thương kinh doanh tại các chợ đầu mối như Tân Bình, Bình Tây, Soái Kình Lâm... băn khoăn, hàng bán buộc phải xuất hóa đơn và hộ kinh doanh sẽ phải đóng thuế dựa trên doanh thu đó. Nhưng thực tế hàng bị đổi, trả lại như cơm bữa... thì tính thế nào?",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/14/edit-z670510702871349fe01d5086065d8906cea55aafb5e82-1749899565586268982595-99-0-899-1280-crop-1749899614270639965962.jpeg",
-      "link": "https://thanhnien.vn/tieu-thuong-lung-tung-voi-hang-bi-doi-tra-sau-khi-xuat-hoa-don-185250614181947636.htm",
-      "pubDate": "2025-06-15 01:06:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nTrường Đại học Sư phạm Hà Nội công bố đề thi và đáp án 8 môn thi đánh giá năng lực (SPT), chiều 15/6.",
+      "image": "https://vcdn1-vnexpress.vnecdn.net/2025/06/15/sp-hn-2-1747456383-1747456387-2974-5450-1749987582.png?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=yaTMRnCnOv1d1jzdwBi0Kg",
+      "link": "https://vnexpress.net/de-va-dap-an-8-mon-thi-danh-gia-nang-luc-spt-cua-dai-hoc-su-pham-ha-noi-2025-4899113.html",
+      "pubDate": "2025-06-15 12:01:02",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Tiểu thương l&amp;uacute;ng t&amp;uacute;ng với h&amp;agrave;ng đổi trả... sau khi xuất h&amp;oacute;a đơn"
+      "title": "ĐH Sư phạm Hà Nội công bố đề và đáp án 8 môn thi đánh giá năng lực"
     },
-    "-OSnQ4sRGkTc-ZwNgofC": {
-      "approvedAt": "2025-06-15T11:49:31.095Z",
+    "-OSnudWsMa8psjaekkfd": {
+      "approvedAt": "2025-06-15T14:07:23.301Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Giá USD trong các ngân hàng thương mại duy trì đà tăng nhưng thị trường tự do giảm mạnh.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/15/do-la-ngoc-thach-8629-16757329993851781194921-0-0-413-660-crop-17499484251021127723236.jpg",
-      "link": "https://thanhnien.vn/gia-usd-hom-nay-1562025-do-tu-do-lao-doc-nguoc-chieu-ngan-hang-185250615074430565.htm",
-      "pubDate": "2025-06-15 00:59:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nQuán bar, pub phổ biến ở Anh và có nhiều luật lệ ngầm du khách nên tìm hiểu để không bị lạc lõng trong lần đầu ghé.",
+      "image": "https://vcdn1-dulich.vnecdn.net/2025/06/15/g13ae0-1749972375-1749972421-2769-1749972426.jpg?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=XV2MaSFAp-ZBaZaBZdSdUw",
+      "link": "https://vnexpress.net/luat-ngam-trong-quan-bar-o-anh-4899071.html",
+      "pubDate": "2025-06-15 12:00:00",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Gi&amp;aacute; USD h&amp;ocirc;m nay 15.6.2025: Đ&amp;ocirc; tự do lao dốc, ngược chiều ng&amp;acirc;n h&amp;agrave;ng"
+      "title": "Luật ngầm trong quán bar ở Anh"
     },
-    "-OSnQ4zFM38PTIJVND36": {
-      "approvedAt": "2025-06-15T11:49:31.531Z",
+    "-OSnudcefFnTd5_oLu3Q": {
+      "approvedAt": "2025-06-15T14:07:23.736Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Giá vàng trong nước và thế giới đồng loạt tăng cao trong tuần nhưng người mua chỉ lãi nhẹ.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/15/vang-cua-nt-17499476017321039272935-0-0-1250-2000-crop-17499476391451299066049.jpg",
-      "link": "https://thanhnien.vn/gia-vang-hom-nay-1562025-tang-hon-3-trieu-nhung-nguoi-mua-chi-lai-500000-dong-185250615073415797.htm",
-      "pubDate": "2025-06-15 00:58:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nCác mạng lưới tội phạm tinh vi dùng AI để tạo hàng nghìn sinh viên ảo, chiếm chỗ của người thật để lấy đi hàng triệu USD hỗ trợ tài chính.",
+      "image": "https://vcdn1-vnexpress.vnecdn.net/2025/06/14/sinh-vie-n-columbia-1749877691-6715-6435-1749877996.jpg?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=Fm9udoxBQwBov5sTW0MrEQ",
+      "link": "https://vnexpress.net/nan-sinh-vien-ma-tao-bang-ai-khien-dai-hoc-my-dau-dau-4898800.html",
+      "pubDate": "2025-06-15 12:00:00",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Gi&amp;aacute; v&amp;agrave;ng h&amp;ocirc;m nay 15.6.2025: Tăng hơn 3 triệu nhưng người mua chỉ l&amp;atilde;i 500.000 đồng"
+      "title": "Nạn sinh viên 'ma' tạo bằng AI khiến đại học Mỹ đau đầu"
     },
-    "-OSnQ5531eYxJRo7pDhO": {
-      "approvedAt": "2025-06-15T11:49:31.966Z",
+    "-OSnudjQYI62BVw6RQ1i": {
+      "approvedAt": "2025-06-15T14:07:24.170Z",
       "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
       "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Từ 1.7, đất nước bước sang giai đoạn mới với 34 tỉnh, TP cùng hoạt động theo mô hình chính quyền 2 cấp. Cùng với đó, hàng loạt chủ trương, chính sách mới sẽ tạo ra những động lực thúc đẩy đột phá kinh tế - xã hội.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/14/nh-thu-nghiem-mo-hinh-chinh-quyen-2-cap-tai-ubnd-q1-tphcm-va-tu-17-la-phuong-sai-gonanh-nguyen-anh-online-17499126095911394-43-0-683-1024-crop-17499126266751947922482.jpg",
-      "link": "https://thanhnien.vn/dat-nuoc-sang-trang-1852506142155015.htm",
-      "pubDate": "2025-06-14 23:07:00",
-      "source": "",
+      "category": "thoi-su",
+      "description": "\nTại một lớp luyện thi ở Hàn Quốc, trẻ mẫu giáo đang loay hoay học viết tiếng Anh, chuẩn bị cho kỳ thi đại học trong hơn 10 năm tới.",
+      "image": "https://vcdn1-vnexpress.vnecdn.net/2025/06/14/imrs-3-1749697220-1158-1749697-2698-2648-1749835581.jpg?w=1200&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=KS0B54nOh7gXBMBRRlehQg",
+      "link": "https://vnexpress.net/luyen-thi-tu-mau-giao-o-han-quoc-4897747.html",
+      "pubDate": "2025-06-15 12:00:00",
+      "source": "VnExpress",
       "status": "approved",
-      "title": "Đất nước sang trang"
-    },
-    "-OSnQ5Bra2KXi0Uoyi0I": {
-      "approvedAt": "2025-06-15T11:49:32.402Z",
-      "approvedBy": "dJNEfRR4MaMCreWwgqYkeWwymRy1",
-      "approvedByName": "nguyen",
-      "category": "kinh-te",
-      "description": "\n Ứng phó với biến đổi khí hậu là việc chung của toàn cầu, nhưng trách nhiệm giữa các nước phát triển và đang phát triển trong vấn đề \"nợ xanh\" là có sự khác biệt.",
-      "image": "https://images2.thanhnien.vn/zoom/600_315/528068263637045248/2025/6/14/anh-3-17499053870651752049179-42-0-1292-2000-crop-1749905421672298326717.jpg",
-      "link": "https://thanhnien.vn/nuoc-da-va-dang-phat-trien-ai-no-xanh-nhieu-hon-185250614195123806.htm",
-      "pubDate": "2025-06-14 13:22:00",
-      "source": "",
-      "status": "approved",
-      "title": "Nước đ&amp;atilde; v&amp;agrave; đang ph&amp;aacute;t triển: Ai &amp;#039;nợ xanh&amp;#039; nhiều hơn?"
+      "title": "Luyện thi từ mẫu giáo ở Hàn Quốc"
     }
   },
   "users": {
@@ -154,8 +128,8 @@
       "isAdmin": true,
       "role": 2
     },
-    "o1sLagUaBNV5FOMEUFpEuDayUNW2": {
-      "createdAt": "2025-06-15T09:48:31.868Z",
+    "wNP5Qg60r9OMh4CLN1sgLp6N2T03": {
+      "createdAt": "2025-06-15T14:14:19.606Z",
       "displayName": "Duyên",
       "email": "tnkduyenntml@gmail.com",
       "role": 1

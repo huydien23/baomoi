@@ -519,7 +519,7 @@
             </div>
             <div class="sidebar-title">Menu</div>
             <div class="menu">
-                <div class="active">
+                <div class="active" id="tabProfile">
                     <i class="fas fa-user-circle"></i>
                     Thông tin chung
                 </div>
@@ -531,7 +531,7 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-                <div>
+                <div id="tabHistory" style="cursor:pointer;">
                     <i class="fas fa-history"></i>
                     Tin đã xem
                 </div>
@@ -550,40 +550,48 @@
                 <i class="fas fa-user-circle"></i>
                 Thông tin tài khoản
             </div>
-            <div class="info-list">
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fas fa-user"></i>
-                        Họ tên
-                    </div>
-                    <div>
-                        <span class="info-value" id="displayName">Chưa có dữ liệu</span>
-                        <span class="info-action" id="editNameBtn">
-                            <i class="fas fa-pen"></i> Thay đổi
-                        </span>
+            <div class="account-content">
+                <div id="profileContent">
+                    <div class="info-list">
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-user"></i>
+                                Họ tên
+                            </div>
+                            <div>
+                                <span class="info-value" id="displayName">Chưa có dữ liệu</span>
+                                <span class="info-action" id="editNameBtn">
+                                    <i class="fas fa-pen"></i> Thay đổi
+                                </span>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </div>
+                            <div>
+                                <span class="info-value" id="userEmail">email@gmail.com</span>
+                                <span class="disabled-link">Không thể thay đổi</span>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-lock"></i>
+                                Mật khẩu
+                            </div>
+                            <div>
+                                <span class="info-value">••••••••</span>
+                                <span class="info-action" id="editPasswordBtn">
+                                    <i class="fas fa-key"></i> Thay đổi
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fas fa-envelope"></i>
-                        Email
-                    </div>
-                    <div>
-                        <span class="info-value" id="userEmail">email@gmail.com</span>
-                        <span class="disabled-link">Không thể thay đổi</span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">
-                        <i class="fas fa-lock"></i>
-                        Mật khẩu
-                    </div>
-                    <div>
-                        <span class="info-value">••••••••</span>
-                        <span class="info-action" id="editPasswordBtn">
-                            <i class="fas fa-key"></i> Thay đổi
-                        </span>
-                    </div>
+                <div id="historyContent" style="display:none;">
+                    <h2 style="margin-bottom:16px;"><i class="fas fa-history"></i> Tin đã xem</h2>
+                    <div id="userHistoryList"></div>
                 </div>
             </div>
         </div>
@@ -640,5 +648,30 @@
         </div>
     </div>
     <script type="module" src="js/account.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabProfile = document.getElementById('tabProfile');
+        const tabHistory = document.getElementById('tabHistory');
+        const profileContent = document.getElementById('profileContent');
+        const historyContent = document.getElementById('historyContent');
+        if(tabProfile && tabHistory && profileContent && historyContent) {
+            tabProfile.addEventListener('click', function() {
+                tabProfile.classList.add('active');
+                tabHistory.classList.remove('active');
+                profileContent.style.display = 'block';
+                historyContent.style.display = 'none';
+            });
+            tabHistory.addEventListener('click', function() {
+                tabProfile.classList.remove('active');
+                tabHistory.classList.add('active');
+                profileContent.style.display = 'none';
+                historyContent.style.display = 'block';
+                // Gọi lại displayHistory để load lại lịch sử
+                if(window.displayHistory) window.displayHistory();
+            });
+        }
+    });
+    </script>
+    <script type="module" src="js/history.js"></script>
 </body>
 </html> 

@@ -69,6 +69,7 @@ async function fetchNewsFromPublic(category) {
             const newsItem = childSnapshot.val();
             news.push({ ...newsItem, id: childSnapshot.key });
         });
+        console.log('[fetchNewsFromPublic]', category, news);
         return news.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
     } catch (error) {
         console.error('Lỗi khi lấy tin từ publicNews:', error);
@@ -76,10 +77,16 @@ async function fetchNewsFromPublic(category) {
     }
 }
 
-// Hàm lấy tin tức từ RSS (chỉ lấy từ publicNews, không fetch RSS thật)
-async function fetchNewsFromRSS(url) {
-    const category = getCategoryFromUrl(url);
-    return await fetchNewsFromPublic(category);
+// Hàm lấy tin tức từ publicNews (dùng cho mọi nơi hiển thị)
+async function fetchNewsFromRSS(urlOrCategory, count) {
+    // Nếu truyền vào là category thì dùng luôn, nếu là url thì map sang category
+    let category = urlOrCategory;
+    if (category && category.startsWith && category.startsWith('http')) {
+        category = getCategoryFromUrl(category);
+    }
+    let news = await fetchNewsFromPublic(category);
+    if (count) news = news.slice(0, count);
+    return news;
 }
 
 // --- THAY ĐỔI NGUỒN KHÔNG BỊ CHẶN ---
@@ -277,21 +284,21 @@ document.head.appendChild(style);
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Tin nổi bật
-        const { url: urlNoiBat, section: sectionNoiBat, count: countNoiBat } = rssFeeds['tin-noi-bat'];
-        const tinNoiBat = await fetchNewsFromRSS(urlNoiBat, countNoiBat);
+        const { section: sectionNoiBat, count: countNoiBat } = rssFeeds['tin-noi-bat'];
+        const tinNoiBat = await fetchNewsFromRSS('tin-noi-bat', countNoiBat);
         if (tinNoiBat.length > 0) {
             displayMainArticle(tinNoiBat[0]);
         }
 
         // Tin mới nhất
-        const { url: urlMoi, section: sectionMoi, count: countMoi } = rssFeeds['tin-moi'];
-        const tinMoi = await fetchNewsFromRSS(urlMoi, countMoi);
+        const { section: sectionMoi, count: countMoi } = rssFeeds['tin-moi'];
+        const tinMoi = await fetchNewsFromRSS('tin-moi', countMoi);
         displayNews(tinMoi, sectionMoi);
 
         // Các chuyên mục khác
         for (const key of ['thoi-su', 'kinh-te', 'phap-luat', 'giai-tri', 'giao-duc', 'y-te']) {
-            const { url, section, count } = rssFeeds[key];
-            const articles = await fetchNewsFromRSS(url, count);
+            const { section, count } = rssFeeds[key];
+            const articles = await fetchNewsFromRSS(key, count);
             displayNews(articles, section);
         }
 

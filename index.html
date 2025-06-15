@@ -726,7 +726,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="js/main.js"></script>
     <script src="js/weather.js"></script>
-    <script src="js/news-api.js"></script>
+    <script type="module" src="js/news-api.js"></script>
 
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
@@ -894,5 +894,21 @@
         // Show register modal
     });
     </script>
+
+    <!-- Thêm đoạn JS bật/tắt -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('showHistoryBtn');
+        const historyDiv = document.getElementById('historyContainer');
+        if (btn && historyDiv) {
+            btn.addEventListener('click', () => {
+                historyDiv.style.display = historyDiv.style.display === 'none' ? 'block' : 'none';
+            });
+        }
+    });
+    </script>
+
+    <!-- Đảm bảo đã import js/history.js -->
+    <script type="module" src="js/history.js"></script>
 </body>
 </html>

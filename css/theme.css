@@ -20,16 +20,16 @@
     --primary-light: #60a5fa;
     --primary-dark: #2563eb;
     --success-color: #10b981;
-    --danger-color: #ffffff;
-    --text-primary: #ffffff;
-    --text-secondary: #000000;
+    --danger-color: #ef4444;
+    --text-primary: #f3f4f6;
+    --text-secondary: #cbd5e1;
     --bg-primary: #111827;
     --bg-secondary: #1f2937;
     --border-color: #374151;
     --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
-    --hover-bg: rgba(59, 130, 246, 0.2);
-    --title-color: #3b82f6;
-    --category-color: #fff;
+    --hover-bg: rgba(59, 130, 246, 0.15);
+    --title-color: #60a5fa;
+    --category-color: #fbbf24;
 }
 
 
