@@ -1,0 +1,66 @@
+/* 
+ * layout-fix.css
+ * File CSS này được tạo để sửa lỗi hiển thị của right-sidebar trên các trang chuyên mục
+ * Updated to fix layout issues across all pages
+ */
+
+/* Reset cơ bản */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Container chính */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+/* Force main-container to always display as grid with consistent widths */
+.main-container {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 350px !important;
+    gap: 20px !important;
+    margin-top: 20px;
+    position: relative;
+}
+
+/* Kiểm soát kích thước của main-content */
+.main-content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0; /* Prevents content from overflowing grid cell */
+}
+
+/* Right sidebar */
+.right-sidebar {
+    width: 350px !important;
+    min-width: 350px !important;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Fix for sidebar sections */
+.sidebar-section {
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+    .main-container {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .right-sidebar {
+        width: 100% !important;
+        min-width: 100% !important;
+        margin-top: 20px;
+    }
+}

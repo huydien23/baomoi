@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -205,11 +206,11 @@
             border-radius: 50%;
         }
 
-        input:checked + .slider {
+        input:checked+.slider {
             background-color: var(--primary-color);
         }
 
-        input:checked + .slider:before {
+        input:checked+.slider:before {
             transform: translateX(24px);
         }
 
@@ -220,6 +221,7 @@
         }
     </style>
 </head>
+
 <body>
     <header class="header">
         <div class="header-content">
@@ -278,7 +280,8 @@
                     <h2>Tin nổi bật</h2>
                     <div class="main-article">
                         <a href="#">
-                            <img src="https://via.placeholder.com/800x400?text=No+News" alt="Tin nổi bật" style="width:100%;max-height:350px;display:block;object-fit:cover;margin:0 auto;">
+                            <img src="https://via.placeholder.com/800x400?text=No+News" alt="Tin nổi bật"
+                                style="width:100%;max-height:350px;display:block;object-fit:cover;margin:0 auto;">
                             <div class="main-article-content">
                                 <h3 class="main-article-title"></h3>
                                 <p class="main-article-desc"></p>
@@ -546,9 +549,11 @@
                         <img src="img/banner/nuoiem.png" alt="Trẻ em Mộc Châu" class="nuoiem-main-img">
                         <div class="nuoiem-desc">
                             <p>
-                                <span class="nuoiem-highlight">Chung tay nuôi dưỡng và hỗ trợ trẻ em vùng cao Mộc Châu đến trường.</span>
+                                <span class="nuoiem-highlight">Chung tay nuôi dưỡng và hỗ trợ trẻ em vùng cao Mộc Châu
+                                    đến trường.</span>
                                 <br>
-                                Hãy cùng góp sức vì tương lai các em nhỏ! Mỗi đóng góp là một hy vọng cho trẻ em nghèo vượt khó.
+                                Hãy cùng góp sức vì tương lai các em nhỏ! Mỗi đóng góp là một hy vọng cho trẻ em nghèo
+                                vượt khó.
                             </p>
                             <a href="https://nuoiem.com" target="_blank" class="nuoiem-btn">Tìm hiểu thêm</a>
                         </div>
@@ -561,7 +566,7 @@
                     <div class="weather-content">
                         <select id="citySelect" class="city-select">
                             <option value="Hanoi">Hà Nội</option>
-                            <option value="Ho Chi Minh City">TP. Hồ Chí Minh</option>  
+                            <option value="Ho Chi Minh City">TP. Hồ Chí Minh</option>
                             <option value="Hải Phòng">Hải Phòng</option>
                             <option value="Can Tho">Cần Thơ</option>
                             <option value="Da Lat, VN">Đà Lạt</option>
@@ -680,7 +685,8 @@
             <div class="footer-sections">
                 <div class="footer-col">
                     <h3>Về chúng tôi</h3>
-                    <p>24h Tin Mới - Trang tin tức cập nhật 24/7 về những thông tin mới nhất và thời sự, kinh tế, thể thao và giải trí.</p>
+                    <p>24h Tin Mới - Trang tin tức cập nhật 24/7 về những thông tin mới nhất và thời sự, kinh tế, thể
+                        thao và giải trí.</p>
                 </div>
                 <div class="footer-col">
                     <h3>Chuyên mục</h3>
@@ -726,189 +732,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="js/main.js"></script>
     <script src="js/weather.js"></script>
-    <script type="module" src="js/news-api.js"></script>
-
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Đăng nhập</h2>
-            <form id="loginForm">
-                <div class="form-group">
-                    <input type="email" id="loginEmail" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="loginPassword" placeholder="Mật khẩu" required>
-                </div>
-                <button type="submit" class="btn-login">Đăng nhập</button>
-                <p>Chưa có tài khoản? <a href="#" id="showRegister">Đăng ký</a></p>
-                <p><a href="#" id="showForgotPassword">Quên mật khẩu?</a></p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Đăng ký</h2>
-            <form id="registerForm">
-                <div class="form-group">
-                    <input type="text" id="registerName" placeholder="Họ và tên" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="registerEmail" placeholder="Email" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="registerPassword" placeholder="Mật khẩu" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu" required>
-                </div>
-                <button type="submit" class="btn-register">Đăng ký</button>
-                <p>Đã có tài khoản? <a href="#" id="showLogin">Đăng nhập</a></p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Forgot Password Modal -->
-    <div id="forgotPasswordModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Quên mật khẩu</h2>
-            <form id="forgotPasswordForm">
-                <div class="form-group">
-                    <input type="email" id="resetEmail" placeholder="Email" required>
-                </div>
-                <button type="submit" class="btn-reset">Gửi link đặt lại mật khẩu</button>
-                <p><a href="#" id="backToLogin">Quay lại đăng nhập</a></p>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Thông tin tài khoản -->
-    <div id="accountModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeAccountModal">&times;</span>
-            <h2>Thông tin tài khoản</h2>
-            <form id="accountForm">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="accountEmail" disabled>
-                </div>
-                <div class="form-group">
-                    <label>Tên người dùng</label>
-                    <input type="text" id="accountName" required>
-                </div>
-                <div class="form-group">
-                    <label>Số điện thoại</label>
-                    <input type="tel" id="accountPhone">
-                </div>
-                <button type="submit" class="btn btn-register">Lưu thông tin</button>
-            </form>
-            <button class="btn btn-reset" id="changePasswordBtn" style="margin-top:16px;">Đổi mật khẩu</button>
-        </div>
-    </div>
-
-    <!-- Modal Đổi mật khẩu -->
-    <div id="changePasswordModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeChangePasswordModal">&times;</span>
-            <h2>Đổi mật khẩu</h2>
-            <form id="changePasswordForm">
-                <div class="form-group">
-                    <label>Mật khẩu hiện tại</label>
-                    <input type="password" id="currentPassword" required>
-                </div>
-                <div class="form-group">
-                    <label>Mật khẩu mới</label>
-                    <input type="password" id="newPassword" required>
-                </div>
-                <div class="form-group">
-                    <label>Xác nhận mật khẩu mới</label>
-                    <input type="password" id="confirmNewPassword" required>
-                </div>
-                <button type="submit" class="btn btn-login">Xác nhận đổi mật khẩu</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Firebase Scripts -->
-    <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/auth.js"></script>
-    <script type="module">
-    import { auth } from './js/firebase-config.js';
-    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { ThemeManager } from './js/theme.js';
-
-    // Initialize theme manager
-    ThemeManager.init();
-
-    // Auth state observer
-    onAuthStateChanged(auth, user => {
-        const authButtons = document.getElementById('authButtons');
-        const userMenu = document.getElementById('userMenu');
-        const userEmail = document.getElementById('userEmail');
-
-        if (user) {
-            authButtons.style.display = 'none';
-            userMenu.style.display = 'block';
-            userEmail.textContent = user.email;
-        } else {
-            authButtons.style.display = 'flex';
-            userMenu.style.display = 'none';
-        }
-    });
-
-    // User menu toggle
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const userDropdown = document.getElementById('userDropdown');
-
-    userMenuBtn.addEventListener('click', () => {
-        userDropdown.classList.toggle('show');
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-            userDropdown.classList.remove('show');
-        }
-    });
-
-    // Logout handler
-    document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        try {
-            await signOut(auth);
-        } catch (error) {
-            console.error('Lỗi đăng xuất:', error);
-        }
-    });
-
-    // Login/Register button handlers
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        // Show login modal
-    });
-
-    document.getElementById('registerBtn').addEventListener('click', () => {
-        // Show register modal
-    });
-    </script>
-
-    <!-- Thêm đoạn JS bật/tắt -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const btn = document.getElementById('showHistoryBtn');
-        const historyDiv = document.getElementById('historyContainer');
-        if (btn && historyDiv) {
-            btn.addEventListener('click', () => {
-                historyDiv.style.display = historyDiv.style.display === 'none' ? 'block' : 'none';
-            });
-        }
-    });
-    </script>
-
-    <!-- Đảm bảo đã import js/history.js -->
-    <script type="module" src="js/history.js"></script>
+    <script src="js/active-nav.js"></script>
 </body>
+
 </html>

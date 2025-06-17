@@ -36,6 +36,54 @@ a {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Important fix for layout issues */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Force correct display of grid */
+.main-container {
+    display: grid !important;
+    grid-template-columns: 1fr 350px !important;
+    gap: 20px !important;
+}
+
+/* Right Sidebar specific styles */
+.right-sidebar {
+    padding: 0;
+    margin: 0;
+}
+
+/* Fix 100% width containers on mobile */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    /* Keep grid layout but adjust columns for mobile */
+    .main-container {
+        grid-template-columns: 1fr !important;
+    }
+    .main-content,
+    .right-sidebar {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
 }
 
 /* Header Styles */
@@ -92,6 +140,24 @@ header {
 
 .main-nav a:hover {
     color: var(--primary-color);
+}
+
+/* Thêm CSS cho trạng thái active của các liên kết trong thanh navigation */
+.nav a.active {
+    position: relative;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+    transform: scaleX(1);
 }
 
 /* Hiệu ứng gạch chân */
@@ -420,7 +486,7 @@ section h2 {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    display: block;
 }
 
 .news-card:hover .news-image img {
@@ -626,24 +692,39 @@ footer {
     grid-template-columns: 1fr 350px;
     gap: 20px;
     margin-top: 20px;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.main-content {
-    max-width: 800px;
     width: 100%;
-    margin: 0;
-    padding: 0 10px 0 0;
-    box-sizing: border-box;
 }
 
-/* Right Sidebar */
+/* Đảm bảo sidebar hiển thị đúng */
 .right-sidebar {
     width: 350px;
-    padding: 25px;
-    background: #f8f9fa;
+}
+
+/* Media query cho responsive layout */
+@media (max-width: 992px) {
+    .main-container {
+        grid-template-columns: 1fr !important;
+    }
+    .right-sidebar {
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+}
+
+@media (min-width: 993px) {
+    .main-container {
+        grid-template-columns: 1fr 350px !important;
+        display: grid !important;
+    }
+}
+
+/* Fix issues with nested elements */
+.category-sections {
+    margin-top: 30px;
 }
 
 .weather-widget,
@@ -1391,89 +1472,41 @@ footer {
 .nuoiem-section h3 {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 20px;
-    color: var(--primary-color);
-    font-weight: bold;
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #2a2a2a;
 }
+
 .nuoiem-logo {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: #fff3e0;
-    border: 2px solid #ffb300;
-    object-fit: cover;
-    box-shadow: 0 1px 6px rgba(255,152,0,0.13);
+    height: 24px;
+    margin-right: 8px;
 }
+
 .nuoiem-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
+
 .nuoiem-main-img {
     width: 100%;
-    max-width: 320px;
-    height: auto;
-    aspect-ratio: 4/3;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(255,152,0,0.13);
-    border: 2px solid #ffe0b2;
+    border-radius: 6px;
     margin-bottom: 10px;
 }
-.nuoiem-desc {
-    width: 100%;
-    max-width: 320px;
-    background: #fff8e1;
-    border-radius: 8px;
-    padding: 12px 14px 10px 14px;
-    box-shadow: 0 1px 6px rgba(255,193,7,0.07);
-    margin: 0 auto;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.nuoiem-desc p {
-    margin: 0 0 10px 0;
-    font-size: 15.5px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    width: 100%;
-    text-align: left;
-}
+
 .nuoiem-highlight {
-    color: var(--primary-color);
+    color: #d4282e;
     font-weight: 600;
 }
-.nuoiem-btn {
-    display: inline-block;
-    padding: 7px 18px;
-    background: linear-gradient(90deg, #ff9800 60%, #ffd54f 100%);
-    color: #fff;
-    border-radius: 5px;
-    font-size: 14.5px;
-    font-weight: bold;
-    text-decoration: none;
-    box-shadow: 0 2px 8px rgba(255,152,0,0.13);
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    border: none;
-    outline: none;
-    margin: 0 auto;
-}
-.nuoiem-btn:hover {
-    background: linear-gradient(90deg, #ffd54f 60%, #ff9800 100%);
-    color: var(--primary-color);
-    box-shadow: 0 4px 16px rgba(255,152,0,0.18);
-}
-@media (max-width: 600px) {
-    .nuoiem-main-img,
-    .nuoiem-desc {
-        max-width: 100%;
-    }
+
+/* Đảm bảo nuoiem-section nằm trong right-sidebar */
+.right-sidebar .nuoiem-section {
+    display: block;
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
 }
 
 /* Chính phủ Việt Nam Section */
@@ -1674,9 +1707,11 @@ footer {
     background: #fff;
     transition: transform 0.2s;
 }
+
 .sidebar-news-item:hover .news-image img {
     transform: scale(1.06) rotate(-2deg);
 }
+
 .sidebar-news-item .news-content {
     flex: 1;
     font-size: 14.5px;
@@ -2055,4 +2090,42 @@ footer {
 .dropdown-menu .logout:hover {
     background-color: #ffebee;
     color: #f44336;
+}
+
+/* Hiệu ứng hover cho các section trong sidebar */
+.sidebar-section {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Đảm bảo tất cả các sidebar-section đều có giao diện nhất quán */
+.sidebar-section, 
+.nuoiem-section, 
+.modern-weather-widget {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Đảm bảo hình ảnh trong tin tức hiển thị đúng */
+.news-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Đảm bảo container của sidebar không bị overflow */
+.main-container {
+    overflow: visible;
+}
+
+/* Đảm bảo category-news-list không quá rộng */
+.category-news-list {
+    max-width: 100%;
+    overflow: hidden;
 }
